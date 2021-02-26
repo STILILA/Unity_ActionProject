@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 6efa30749e6157640ba417923496e2f2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - targerAudio: {fileID: 1640244899138421207, guid: d5397589c63ede141ad77983f4348e03,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
