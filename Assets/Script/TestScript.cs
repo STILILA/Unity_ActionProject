@@ -16,24 +16,24 @@ public class TestScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
-            scene.gameScreen.FadeIn(60);
+            scene.gameScreen.FadeIn(Color.black, 60);
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            scene.gameScreen.FadeOut(60);
+            scene.gameScreen.FadeOut(Color.black, 60);
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
             GameConfig.Obj.BGM_volume -= 0.1f;
             
-            GlobalManager.Audio.SetBGMVolume(1);
+            Global.Audio.SetBGMVolume(1);
         }
 
         if (Input.GetKeyDown(KeyCode.W))
         {
             GameConfig.Obj.BGM_volume += 0.1f;
-            GlobalManager.Audio.SetBGMVolume(1);
+            Global.Audio.SetBGMVolume(1);
         }
 
     }

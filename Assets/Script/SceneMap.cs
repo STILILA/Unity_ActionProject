@@ -28,8 +28,8 @@ public class SceneMap : SceneBase
         interpreter = GetComponent<GameInterpreter>();
         events = FindObjectsOfType<GameEvent>();
         msgObj = interpreter.msgObj;
-        gameScreen.FadeIn(30);
-        GlobalManager.Audio.PlayBGM(bgm);
+        gameScreen.FadeIn(Color.black, 30);
+        Global.Audio.PlayBGM(bgm);
 
         
 

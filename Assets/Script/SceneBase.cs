@@ -11,11 +11,6 @@ public class SceneBase : MonoBehaviour
     static bool gameInit = false;
     public GameScreen gameScreen;
 
-    //public GameObject targetAudioManager;
-    //public AudioManager Audio;
-    // public GameConfig gameConfig;
-
-
     // Start is called before the first frame update
 
 
@@ -24,9 +19,9 @@ public class SceneBase : MonoBehaviour
         if (!gameInit)
         {
             var nowScene = SceneManager.GetActiveScene().name;
-            if (nowScene != "Title") {
-                Debug.Log("偵測到不是從標題畫面進入，先移至標題畫面建立必須物件");
-                SceneManager.LoadScene("Title");
+            if (nowScene != "StartUse") {
+                Debug.Log("遊戲尚未初始化，先移至初始化場景建立必須物件");
+                SceneManager.LoadScene("StartUse");
                 gameInit = true;
                 SceneManager.LoadScene(nowScene);
             } 

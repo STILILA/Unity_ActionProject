@@ -7,10 +7,11 @@ using UnityEngine;
 /// 用於全域的物件母體
 /// </summary>
 
-public class GlobalManager : MonoBehaviour
+public class Global : MonoBehaviour
 {
-    public AudioManager targerAudio;
+    public AudioManager _audio;
     public static AudioManager Audio;
+
     static GameObject msgObj;
 
     public static bool canControl;
@@ -24,8 +25,7 @@ public class GlobalManager : MonoBehaviour
 
     void Awake()
     {
-        Audio = FindObjectOfType<AudioManager>();
-        if (Audio == null){Audio = Instantiate(targerAudio).GetComponent<AudioManager>();}
+        Audio = _audio;
         DontDestroyOnLoad(this.gameObject);        // 轉場時不釋放
     }
 

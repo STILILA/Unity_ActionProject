@@ -20,8 +20,8 @@ public class SceneTitle : SceneBase
     {
         // super
         base.Start();
-        gameScreen.FadeIn(30);
-        GlobalManager.Audio.PlayBGM(bgm);
+        gameScreen.FadeIn(Color.black, 30);
+        Global.Audio.PlayBGM(bgm);
         //StartCoroutine(Global.Audio.FadeInBGM(bgm, 3));  // 淡入測試
     }
 
@@ -55,7 +55,7 @@ public class SceneTitle : SceneBase
         // 確定
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            GlobalManager.Audio.PlaySE(se_OK);
+            Global.Audio.PlaySE(se_OK);
             TriggerOK(index);
         }
 
@@ -63,7 +63,7 @@ public class SceneTitle : SceneBase
 
     void MoveCursor(int index)
     {
-        GlobalManager.Audio.PlaySE(se_Cursor);
+        Global.Audio.PlaySE(se_Cursor);
         Vector3 pos = cursor.transform.position;
         pos.x = selectOX[index];
         pos.y = buttons[index].transform.position.y;
@@ -95,12 +95,12 @@ public class SceneTitle : SceneBase
         buttons[index].GetComponent<Button>().ChangePicture(1);
         yield return new WaitForSeconds(0.1f);
         buttons[index].GetComponent<Button>().ChangePicture(0);
-        gameScreen.FadeOut(120);
-        StartCoroutine(GlobalManager.Audio.FadeOutBGM(2));
+        gameScreen.FadeOut(Color.black, 120) ;
+        StartCoroutine(Global.Audio.FadeOutBGM(2));
         // 至少等2秒
         yield return new WaitForSeconds(2f);
         // 等待BGM完全停止
-        while (GlobalManager.Audio.BGM.isPlaying)  // 不能用if ，不然只會中斷一次
+        while (Global.Audio.BGM.isPlaying)  // 不能用if ，不然只會中斷一次
         {
             yield return null;
         }
