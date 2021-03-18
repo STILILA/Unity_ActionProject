@@ -50,7 +50,7 @@ public class AudioManager : MonoBehaviour
     
     void Awake()
     {
-        gameConfig = GameConfig.Obj;
+        gameConfig = GameConfig.instance;
         DontDestroyOnLoad(this.gameObject); // 轉場時不釋放
     }
 
@@ -69,7 +69,7 @@ public class AudioManager : MonoBehaviour
     {
         var lastbgm = BGM.clip;
         SetBGMVolume(volume);
-        if (!BGM.isPlaying || lastbgm.name != bgm.name)
+        if (lastbgm == null || !BGM.isPlaying ||  lastbgm.name != bgm.name)
         {
             BGM.clip = bgm;
             BGM.Play();
@@ -88,7 +88,7 @@ public class AudioManager : MonoBehaviour
     {
         var lastbgs = BGS.clip;
         SetBGMVolume(volume);
-        if (!BGS.isPlaying || lastbgs.name != bgs.name)
+        if (lastbgs == null || !BGS.isPlaying || lastbgs.name != bgs.name)
         {
             BGS.clip = bgs;
             BGS.Play();

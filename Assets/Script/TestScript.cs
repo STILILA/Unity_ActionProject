@@ -25,14 +25,14 @@ public class TestScript : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            GameConfig.Obj.BGM_volume -= 0.1f;
+            GameConfig.instance.BGM_volume -= 0.1f;
             
             Global.Audio.SetBGMVolume(1);
         }
 
         if (Input.GetKeyDown(KeyCode.W))
         {
-            GameConfig.Obj.BGM_volume += 0.1f;
+            GameConfig.instance.BGM_volume += 0.1f;
             Global.Audio.SetBGMVolume(1);
         }
 

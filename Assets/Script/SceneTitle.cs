@@ -25,13 +25,19 @@ public class SceneTitle : SceneBase
         //StartCoroutine(Global.Audio.FadeInBGM(bgm, 3));  // 淡入測試
     }
 
+
+    public override void FixedUpdate()
+    {
+        gameScreen.CustomFixUpdate();
+    }
+
     // Update is called once per frame
     public override void Update()
     {
         // super
         base.Update();
-
-        gameScreen.CustomUpdate();
+       // print(Time.deltaTime);
+        
 
         // 還在漸變就中斷
         if (gameScreen.isFading() || cursorLock) { return; }

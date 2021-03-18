@@ -37,19 +37,25 @@ public class SceneMap : SceneBase
         //StartCoroutine(Global.Audio.FadeInBGM(bgm, 3));  // 淡入測試
     }
 
+
+    public override void FixedUpdate()
+    {
+        updateScreen();
+    }
+
     // 定期更新，另外其他物件的update也放在這(其他物件不寫Update())
     public override void Update() {
         // super
         base.Update();
         updateInterpreter();
-        updateScreen();
+        
         updateMessage();
         updateEvents();
     }
 
     void updateScreen()
     {
-        gameScreen.CustomUpdate();
+        gameScreen.CustomFixUpdate();
     }
 
     void updateInterpreter()

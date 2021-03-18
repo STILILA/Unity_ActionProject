@@ -42,6 +42,12 @@ public class SceneBase : MonoBehaviour
     }
 
     // Update is called once per frame
+
+    public virtual void FixedUpdate()
+    {
+
+    }
+
     public virtual void Update()
     {
 

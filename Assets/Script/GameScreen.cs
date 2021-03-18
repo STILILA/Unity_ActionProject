@@ -18,7 +18,7 @@ public class GameScreen : MonoBehaviour
     public Image flashImage;
 
 
-    public virtual void CustomUpdate()
+    public void CustomFixUpdate()
     {
 
         // 處理次數
@@ -33,7 +33,7 @@ public class GameScreen : MonoBehaviour
             UpdateFlash();
             if (nowFlashTime <= 0) { break; }
         }
-        
+        //print(Time.deltaTime);
     }
 
     void UpdateFade()
@@ -41,6 +41,8 @@ public class GameScreen : MonoBehaviour
         if (nowFadeTime > 0)
         {
             nowFadeTime--;
+            // 跳出詢問視窗，可以拿來逐格暫停用
+           // UnityEditor.EditorUtility.DisplayDialog("test", "test", "ok");
             if (nowFadeTime == 0)
             {
                 //if (GetColor(colorName) == Color.white) { 

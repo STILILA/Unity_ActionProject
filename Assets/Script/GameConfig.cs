@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-
+using UnityEngine.Events;
 
 [CreateAssetMenu]
 public class GameConfig : ScriptableObject
@@ -10,15 +10,19 @@ public class GameConfig : ScriptableObject
     public float _BGM_volume = 1;
     public float _SE_volume = 1;
     public int _MSG_skip = 1;
-    static GameConfig selfObject;
+    static GameConfig _instance;
+    public UnityAction action;
 
-    // 獨體方法(要使用GameConfig時就用GameConfig.Obj.xxx，雖然很煩)
-    public static GameConfig Obj
+
+    
+
+    // 獨體方法(要使用GameConfig時就用GameConfig.instance.xxx，雖然很煩)
+    public static GameConfig instance
     {
         get
         {
             // 實體未生成
-            if (selfObject == null)
+            if (_instance == null)
             {
 
                 
@@ -29,8 +33,8 @@ public class GameConfig : ScriptableObject
                 if (file == null)
                 {
                     Debug.Log("GameConfig不存在，重新建立");
-                    selfObject = new GameConfig();
-                    selfObject.Save();
+                    _instance = new GameConfig();
+                    _instance.Save();
                 }
                 // 讀取設定存檔
                 else
@@ -41,15 +45,15 @@ public class GameConfig : ScriptableObject
                     sr.Close();
                     fs.Close();
 
-                    selfObject = new GameConfig();
-                    JsonUtility.FromJsonOverwrite(System.IO.File.ReadAllText(Application.dataPath + "/Save/Config.txt"), selfObject);
+                    _instance = new GameConfig();
+                    JsonUtility.FromJsonOverwrite(System.IO.File.ReadAllText(Application.dataPath + "/Save/Config.txt"), _instance);
 
 
 
                 }
             }
             // 回傳建好的設定檔實體
-            return selfObject;
+            return _instance;
         }
 
     }
@@ -127,7 +131,7 @@ public class GameConfig : ScriptableObject
         get
         {
             // 實體未生成
-            if (selfObject == null)
+            if (_instance == null)
             {
                 // 取得設定存檔
                 string str = PlayerPrefs.GetString("GameConfig");
@@ -135,18 +139,18 @@ public class GameConfig : ScriptableObject
                 if (str == "")
                 {
                     Debug.Log("GameConfig不存在，重新建立");
-                    selfObject = new GameConfig();
-                    selfObject.Save_Easyver();
+                    _instance = new GameConfig();
+                    _instance.Save_Easyver();
                 }
                 // 讀取設定存檔
                 else
                 {
-                    selfObject = new GameConfig(); // 如果是null就不能寫入只好先生成一個，馬德智障
-                    JsonUtility.FromJsonOverwrite(str, selfObject);
+                    _instance = new GameConfig(); // 如果是null就不能寫入只好先生成一個，馬德智障
+                    JsonUtility.FromJsonOverwrite(str, _instance);
                 }
             }
             // 回傳建好的設定檔實體
-            return selfObject;
+            return _instance;
         }
 
     }
@@ -157,7 +161,7 @@ public class GameConfig : ScriptableObject
     [UnityEditor.MenuItem("CustomTag/GameConfig")]
     public static void ShowGameSettings()
     {
-        UnityEditor.Selection.activeObject = Obj;
+        UnityEditor.Selection.activeObject = instance;
     }
 #endif
 
