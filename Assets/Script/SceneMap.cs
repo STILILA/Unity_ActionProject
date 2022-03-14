@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -7,13 +8,19 @@ using UnityEngine.UI;
 public class SceneMap : SceneBase
 {
     public AudioClip bgm;
-    public GameEvent[] events;
+    public GameObject player;
+    public List<GameEvent> events;
+
     public GameInterpreter interpreter;
     GameMessage msgObj;
+    ContactFilter2D contactFilter2D;
+    List<GameObject> allObjects;
 
 
     public override void Start()
     {
+        contactFilter2D = new ContactFilter2D();
+        contactFilter2D.useTriggers = true;
 
         string a = "string";
         string b = a;
@@ -26,9 +33,17 @@ public class SceneMap : SceneBase
         // super
         base.Start();
         interpreter = GetComponent<GameInterpreter>();
-        events = FindObjectsOfType<GameEvent>();
+        //events = FindObjectsOfType<GameEvent>();
         msgObj = interpreter.msgObj;
         gameScreen.FadeIn(Color.black, 30);
+
+        // 
+        allObjects = new List<GameObject>();
+        allObjects.Add(player);
+        foreach (var ev in events) { allObjects.Add(ev.gameObject); }
+
+
+
         Global.Audio.PlayBGM(bgm);
 
         
@@ -47,10 +62,12 @@ public class SceneMap : SceneBase
     public override void Update() {
         // super
         base.Update();
-        updateInterpreter();
+        
         
         updateMessage();
+        updateCollider();
         updateEvents();
+        updateInterpreter();
     }
 
     void updateScreen()
@@ -62,6 +79,39 @@ public class SceneMap : SceneBase
     {
         interpreter.CustomUpdate();
     }
+    void updateCollider() {
+        //foreach (GameObject ev in allObjects) {
+        //          checkCollide(ev.gameObject);
+        //}
+        checkCollide(player);
+	}
+
+    void checkCollide(GameObject obj) {
+
+		//var colliders = Physics2D.OverlapBoxAll(player.transform.position, Vector2.one, 0);
+		//foreach (var coler in colliders) {
+		//    if (coler.gameObject == obj) { continue; }
+		//    Debug.Log(coler.name);
+		//}
+
+
+
+		BoxCollider2D[] selfCols = obj.GetComponents<BoxCollider2D>();
+		if (selfCols.Length > 0) {
+			foreach (GameObject target in allObjects) {
+				if (target == obj) { continue; }
+				BoxCollider2D[] targetCols = target.GetComponents<BoxCollider2D>();
+				foreach (var col in selfCols) {
+					var colCount = col.OverlapCollider(contactFilter2D, targetCols);
+					Debug.Log(target.name + ",   " + colCount);
+					Debug.Log("=========================");
+				}
+
+			}
+		}
+
+	}
+
 
     void updateMessage()
     {
