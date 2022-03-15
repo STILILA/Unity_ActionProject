@@ -20,7 +20,7 @@ public class SceneMap : SceneBase
     public override void Start()
     {
         contactFilter2D = new ContactFilter2D();
-        contactFilter2D.useTriggers = true;
+// contactFilter2D.useTriggers = true;
 
         string a = "string";
         string b = a;
@@ -88,27 +88,26 @@ public class SceneMap : SceneBase
 
     void checkCollide(GameObject obj) {
 
-		//var colliders = Physics2D.OverlapBoxAll(player.transform.position, Vector2.one, 0);
+		//var colliders = Physics2D.OverlapBoxAll(player.transform.position, player.transform.localScale / 2, 0);
 		//foreach (var coler in colliders) {
-		//    if (coler.gameObject == obj) { continue; }
-		//    Debug.Log(coler.name);
+		//	if (coler.gameObject == obj) { continue; }
+		//	Debug.Log(coler.name);
 		//}
 
 
 
-		BoxCollider2D[] selfCols = obj.GetComponents<BoxCollider2D>();
-		if (selfCols.Length > 0) {
-			foreach (GameObject target in allObjects) {
-				if (target == obj) { continue; }
-				BoxCollider2D[] targetCols = target.GetComponents<BoxCollider2D>();
-				foreach (var col in selfCols) {
-					var colCount = col.OverlapCollider(contactFilter2D, targetCols);
-					Debug.Log(target.name + ",   " + colCount);
-					Debug.Log("=========================");
-				}
+		//BoxCollider2D[] selfCols = obj.GetComponents<BoxCollider2D>();
+		//if (selfCols.Length > 0) {
+  //          foreach (var col in selfCols) {
+  //              foreach (GameObject target in allObjects) {
+		//		BoxCollider2D[] targetCols = target.GetComponents<BoxCollider2D>();
+		//			var colCount = col.OverlapCollider(contactFilter2D, targetCols);
+		//			Debug.Log(target.name + ",   " + colCount);
+		//			Debug.Log("=========================");
+		//		}
 
-			}
-		}
+		//	}
+		//}
 
 	}
 

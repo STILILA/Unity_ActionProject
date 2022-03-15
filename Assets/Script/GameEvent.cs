@@ -24,6 +24,9 @@ public class GameEvent : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D col)
     {
+        // 地形跳過
+        if (col.gameObject.layer == 8) { return; }
+
         // 注意，預設狀態調用此方法的物件有勾運動學、且兩邊物件都靜止的話會停止觸發，所以RigidBody的Sleep Mode要選Never Sleep
         if (Input.GetKeyDown(KeyCode.Return) && !scene.interpreter.isRunning)
         {
