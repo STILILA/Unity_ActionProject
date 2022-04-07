@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class GameMessage : MonoBehaviour
 {
-
     public List<Image> imageObjs;
     public List<Sprite> spritesForUse;
     bool[] onUseIndex = new bool[5] ; // 顯示中的圖片欄位
@@ -19,7 +18,7 @@ public class GameMessage : MonoBehaviour
     int[] leftPos = new int[] {80, 328};
     int[] RightPos = new int[] {-75, 328};
     string allTexts = ""; // 對話事件時要顯示的文字
-    Queue allTextArray = new Queue();
+    Queue allTextArray;
     int textIndex = 0;
 
     int waitcount = 0;        // 等待n禎
@@ -62,7 +61,16 @@ public class GameMessage : MonoBehaviour
     }
 
 
-
+    // 全開模式(按著Shift)
+    bool isFast()
+    {
+        return (Input.GetKeyDown(KeyCode.Return) || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
+    }
+    // 快轉模式中(按著Ctrl)
+    bool isSkip()
+    {
+        return (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl));
+    }
 
 
     // 初始化訊息內容
@@ -79,17 +87,14 @@ public class GameMessage : MonoBehaviour
         waitcount = 0;   
         waitFlag = false;  
         allTexts = ConvertEscapeChar(texts);
-        ProcessAllTextsToArray(allTexts);
+        //ProcessAllTextsToArray(allTexts);
 
-        StartCoroutine(AppearText());
         //foreach (var c in allTextArray)
         //{
         //    Debug.Log(c);
         //}
         
     }
-
-
     // 能先轉換的控制碼(跳脫字元)先轉換 (ex：顯示變數、金錢等)
     string ConvertEscapeChar(string input)
     {
@@ -113,270 +118,56 @@ public class GameMessage : MonoBehaviour
     // 以一個字或控制碼為單位分割，存到Quene (為了能用像Ruby的Array#shift方法，C#就是智障到要把動態語言的Array特性分成一大堆class)
     void ProcessAllTextsToArray(string texts)
     {
-        allTextArray.Clear();
+        allTextArray = new Queue();
         while (textIndex < texts.Length)
         {
-            var c = AddChar(texts[textIndex], texts);
+            var c = ProcessChar(texts[textIndex], texts);
             allTextArray.Enqueue(c);
         }
+        textIndex = 0;
     }
 
 
 
-    //// 處理所有文字
-    //void ProcessAllTexts(string texts)
-    //{
-    //    while (true)
-    //    {
-    //        //ProcessWait();
-
-    //        if (isFast() || isSkip()) { waitcount = 0; }
-
-    //        // 等待
-    //        if (waitcount > 0)
-    //        {
-    //            waitcount--;
-    //            return; // 中斷等下一禎
-    //        }
-    //        // 等待決定鍵
-    //        if (waitFlag && !isSkip())
-    //        {
-    //            if (Input.GetKeyDown(KeyCode.Return)){ waitFlag = false; }
-    //            return; // 不管有沒有按都要中斷等下一禎，不然會把下句話全開
-    //        }
-    //        var text = ProcessChar(allTexts[textIndex], allTexts);
-    //        windowMsg.text += text;  // 把字打上去
-    //        if (textSpeed > 0) { waitcount = textSpeed; }   // 設定到下個字的延遲
-    //        if (!isSkip() && !isFast()) { return; } // 打完一個字，中斷等下一禎
-    //        if (!isBusy()) { break; }
-    //    }
-    //}
-
-
-    // 追加單一文字(c:一個文字, text:所有文字(碰到控制碼需要後續文字時用)
-    string AddChar(char c, string texts)
+    // 處理所有文字
+    void ProcessAllTexts(string texts)
     {
-        string text = "";
-        // 遇到控制符
-        if (c == '\\') {
-            text += AddEscapeChar(texts[textIndex], texts);
-            if (textIndex == texts.Length) { return text; }
-            if (textIndex < texts.Length) { c = texts[textIndex]; }
-            return text;
-        }
-        // 遇到換行符
-        if (c == '\n')
+        while (true)
         {
-            text += c;
-            textIndex++;
-            if (textIndex == texts.Length) { return text; }
-            if (textIndex < texts.Length) { c = texts[textIndex]; }
-            return text;
-        }
-        // 一般文字處理
-        text += AddNormalChar(c);
-        return text;
-        c = texts[textIndex];
+            //ProcessWait();
 
-        return text;
-    }
+            if (isFast() || isSkip()) { waitcount = 0; }
 
-
-    // 加入控制碼
-    string AddEscapeChar(char c, string texts)
-    {
-        string nowTexts = texts.Substring(textIndex, texts.Length - textIndex); // 算出剩餘還沒處理的文字
-        string pattern = @"\\([a-zA-Z]+|[\|\.\!]?)"; // 取得控制碼名稱
-        string code = Regex.Match(nowTexts, pattern).Groups[1].Value; // 匹配
-        textIndex++;
-        switch (code)
-        {
-            case "|": // 等待60f
-                textIndex++;
-                return '\\' + "|";
-            case ".": // 等待15f
-                textIndex++;
-                return '\\'+".";
-            case "!": // 等待決定鍵
-                textIndex++;
-                return '\\'+"!";
-            case "c": // 換色
-                return AddTextColor(texts);
-            case "f": // 文字大小
-                return AddTextSize(texts);
-            case "s": // 文字速度
-                return AddTextSpeed(texts);
-            case "B": // 粗體切換
-                textIndex++;
-                return '\\' + "B";
-            case "I": // 斜體切換
-                textIndex++;
-                return '\\' + "I";
-            default:
-                return "";
-        }
-    }
-
-    // 切換顏色
-    string AddTextColor(string texts)
-    {
-        textIndex++; // 推進到'c'文字後面
-        string nowTexts = texts.Substring(textIndex, texts.Length - textIndex); // 算出剩餘還沒處理的文字
-        Match match = Regex.Match(nowTexts, @"\[(#?\w*|\d*)\]");
-        string val = match.Groups[1].Value;  // 取得字色
-        textIndex += $"[{val}]".Length; // 推進的字數
-        return '\\' + $"c[{val}]";
-    }
-    // 改變文字大小
-    string AddTextSize(string texts)
-    {
-        textIndex++; // 推進到'f'文字後面
-        string nowTexts = texts.Substring(textIndex, texts.Length - textIndex); // 算出剩餘還沒處理的文字
-        Match match = Regex.Match(nowTexts, @"\[(\d+)\]");
-        string val = match.Groups[1].Value;  // 設定文字大小
-        textIndex += $"[{val}]".Length;           // 推進的字數
-        return '\\' + $"f[{val}]";
-
-    }
-    // 改變文字速度
-    string AddTextSpeed(string texts)
-    {
-        textIndex++; // 推進到's'文字後面
-        string nowTexts = texts.Substring(textIndex, texts.Length - textIndex); // 算出剩餘還沒處理的文字
-        Match match = Regex.Match(nowTexts, @"\[(\d+)\]");
-        string val = match.Groups[1].Value;  // 設定文字大小
-        textIndex += $"[{val}]".Length;           // 推進的字數
-        return '\\' + $"s[{val}]";
-    }
-    // 追加一般文字
-    string AddNormalChar(char c)
-    {
-        textIndex++;
-        return c.ToString();
-    }
-
-
-
-
-    IEnumerator AppearText()
-    {
-        string c = ProcessChar(allTextArray.Dequeue().ToString());
-        while (waitcount > 0)
-        {
-            waitcount--;
-            yield return null;
-        }
-        while (waitFlag)
-        {
-            if (Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0)) {
-                waitFlag = false;
+            // 等待
+            if (waitcount > 0)
+            {
+                waitcount--;
+                return; // 中斷等下一禎
             }
-            yield return null;
-        }
-        windowMsg.text += c;
-        yield return null;
-        // 還有字要打
-        if (allTextArray.Count > 0)
-        {
-            waitcount = textSpeed;
-            StartCoroutine(AppearText());
-        }
-        else
-        {
-            // 打字結束時要做的
+            // 等待決定鍵
+            if (waitFlag && !isSkip())
+            {
+                if (Input.GetKeyDown(KeyCode.Return)){ waitFlag = false; }
+                return; // 不管有沒有按都要中斷等下一禎，不然會把下句話全開
+            }
+            var text = ProcessChar(allTexts[textIndex], allTexts);
+            windowMsg.text += text;  // 把字打上去
+            if (textSpeed > 0) { waitcount = textSpeed; }   // 設定到下個字的延遲
+            if (!isSkip() && !isFast()) { return; } // 打完一個字，中斷等下一禎
+            if (!isBusy()) { break; }
         }
     }
 
 
-    // 處理單一文字(c:一個單位的文字)
-    string ProcessChar(string c)
-    {
-        var code = Regex.Match(c, @"\\([a-zA-Z\|\.\!]+)(\[([#?a-zA-Z0-9, ]+)\])?").Groups;
-        if (code[1].Value != "")
-        {
-            ProcessEscapeChar(code[1].Value, code[3].Value);
-            return "";
-        }
-        else {
-            return ProcessNormalChar(c);
-        }
-        
-    }
-    // 處理一般文字
-    string ProcessNormalChar(string c)
-    {
-        string text = c;
-        if (textColor.Length > 0) { text = $"<color={textColor}>{text}</color>"; }
-        if (textSize > 0) { text = $"<size={textSize}>{text}</size>"; }
-        if (textBold) { text = $"<b>{text}</b>"; }
-        if (textItalic) { text = $"<i>{text}</i>"; }
-        return text;
-    }
-    // 處理控制碼
-    void ProcessEscapeChar(string code1, string code2)
-    {
-
-        switch (code1)
-        {
-            case "|": // 等待60f
-                waitcount = 60;
-                break;
-            case ".": // 等待15f
-                waitcount = 15;
-                break;
-            case "!": // 等待決定鍵
-                waitFlag = true;
-                break;
-            case "c": // 換色
-                ChangeTextColor(code2);
-                break;
-            case "f": // 文字大小
-                ChangeTextSize(code2);
-                break;
-            case "s": // 文字速度
-                ChangeTextSpeed(code2);
-                break;
-            case "B": // 粗體切換
-                ChangeTextBold();
-                break;
-            case "I": // 斜體切換
-                ChangeTextItalic();
-                break;
-        }
-    }
-    // 切換顏色
-    void ChangeTextColor(string code)
-    {
-        textColor = code;  // 設定字色
-    }
-    // 改變文字大小
-    void ChangeTextSize(string code)
-    {
-        textSize = Int32.Parse(code);  // 設定文字大小
-    }
-    // 改變文字速度
-    void ChangeTextSpeed(string code)
-    {
-        textSpeed = Int32.Parse(code);  // 設定文字大小
-    }
-    // 切換粗體
-    void ChangeTextBold()
-    {
-        textBold = !textBold;
-        
-    }
-    void ChangeTextItalic()
-    {
-        textItalic = !textItalic;
-    }
 
 
 
     // 定期更新
     public void CustomUpdate()
     {
-        if (allTextArray.Count > 0)
+        if (textIndex < allTexts.Length)
         {
+            ProcessAllTexts(allTexts);
             return;
         }
 
@@ -389,16 +180,141 @@ public class GameMessage : MonoBehaviour
         }
     }
 
-    // 全開模式(按著Shift)
-    bool isFast()
+    // 處理單一文字(c:一個文字, text:所有文字(碰到控制碼需要後續文字時用)
+    string ProcessChar(char c, string texts)
     {
-        return (Input.GetKeyDown(KeyCode.Return) || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
+        string text = "";
+        /*
+                switch (c)
+                {
+                    case '\n':
+                      textIndex++;
+                      break;
+                    case '\\':
+                      textIndex++;
+                      ProcessEscapeChar(c, texts);
+                      break;
+                    default:
+                      text = ProcessNormalChar(c);
+                      break;
+                }
+        */
+        // 遇到換行符
+        while (c == '\n') {
+            text += c;
+            textIndex++;
+            if (textIndex == texts.Length) { return text; }
+            if (textIndex < texts.Length) { c = texts[textIndex]; }
+        }
+        // 遇到控制符
+        while (c == '\\') {
+            ProcessEscapeChar(texts[textIndex], texts);
+            if (textIndex == texts.Length) { return text; }
+            if (textIndex < texts.Length) { c = texts[textIndex]; }
+        }
+        // 一般文字處理
+        text += ProcessNormalChar(c);
+        return text;
     }
-    // 快轉模式中(按著Ctrl)
-    bool isSkip()
+
+
+
+    // 處理控制碼
+    void ProcessEscapeChar(char c, string texts)
     {
-        return (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl));
+        string nowTexts = texts.Substring(textIndex, texts.Length - textIndex); // 算出剩餘還沒處理的文字
+        string pattern = @"\\([a-zA-Z]+|[\|\.\!]?)"; // 取得控制碼名稱
+        string code = Regex.Match(nowTexts, pattern).Groups[1].Value; // 匹配
+        textIndex++;
+        switch (code)
+        {
+            case "|": // 等待60f
+                textIndex++;
+                waitcount = 60;
+                break;
+            case ".": // 等待15f
+                textIndex++;
+                waitcount = 15;
+                break;
+            case "!": // 等待決定鍵
+                textIndex++;
+                waitFlag = true;
+                break;
+            case "c": // 換色
+                ChangeTextColor(texts);
+                break;
+            case "f": // 文字大小
+                ChangeTextSize(texts);
+                break;
+            case "s": // 文字速度
+                ChangeTextSpeed(texts);
+                break;
+            case "B": // 粗體切換
+                ChangeTextBold();
+                break;
+            case "I": // 斜體切換
+                ChangeTextItalic();
+                break;
+        }
     }
+    // 切換顏色
+    void ChangeTextColor(string texts)
+    {
+        textIndex++; // 推進到'c'文字後面
+        string nowTexts = texts.Substring(textIndex, texts.Length - textIndex); // 算出剩餘還沒處理的文字
+        var pattern = @"\[(#?\w*|\d*)\]";
+        Match match = Regex.Match(nowTexts, pattern);
+        textColor = match.Groups[1].Value;  // 設定字色
+        textIndex += $"[{textColor}]".Length; // 推進的字數
+    }
+    // 改變文字大小
+    void ChangeTextSize(string texts)
+    {
+        textIndex++; // 推進到'f'文字後面
+        string nowTexts = texts.Substring(textIndex, texts.Length - textIndex); // 算出剩餘還沒處理的文字
+        var pattern = @"\[(\d+)\]";
+        Match match = Regex.Match(nowTexts, pattern);
+        textSize = Int32.Parse(match.Groups[1].Value);  // 設定文字大小
+        textIndex += $"[{textSize}]".Length;           // 推進的字數
+
+    }
+    // 改變文字速度
+    void ChangeTextSpeed(string texts)
+    {
+        textIndex++; // 推進到's'文字後面
+        string nowTexts = texts.Substring(textIndex, texts.Length - textIndex); // 算出剩餘還沒處理的文字
+        var pattern = @"\[(\d+)\]";
+        Match match = Regex.Match(nowTexts, pattern);
+        textSpeed = Int32.Parse(match.Groups[1].Value);  // 設定文字大小
+        textIndex += $"[{textSpeed}]".Length;           // 推進的字數
+    }
+
+
+    // 切換粗體
+    void ChangeTextBold()
+    {
+        textIndex++; // 推進的字數
+        textBold = !textBold;
+        
+    }
+    void ChangeTextItalic()
+    {
+        textIndex++; // 推進的字數
+        textItalic = !textItalic;
+    }
+
+    // 處理一般文字
+    string ProcessNormalChar(char c)
+    {
+        string text = c.ToString();
+        if (textColor.Length > 0) { text = $"<color={textColor}>{text}</color>"; }
+        if (textSize > 0) { text = $"<size={textSize}>{text}</size>"; }
+        if (textBold) { text = $"<b>{text}</b>"; }
+        if (textItalic) { text = $"<i>{text}</i>"; }
+        textIndex++;
+        return text;
+    }
+
 
     // 更新等待
     void ProcessWait()
@@ -423,6 +339,8 @@ public class GameMessage : MonoBehaviour
             }
         }
     }
+
+
 
     // 設定圖片(欄位, 圖片檔名)
     public void SetPicture(int index, string name)

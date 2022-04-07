@@ -115,7 +115,7 @@ public class SceneTitle : SceneBase
         //  }
         // async.allowSceneActivation = true;
         // 轉換場景
-        SceneManager.LoadScene("Stage01");
+        SceneManager.LoadScene("SceneMap");
         // 釋放沒用到的物件
         Resources.UnloadUnusedAssets();
     }

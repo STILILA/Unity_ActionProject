@@ -19,6 +19,8 @@ public class MoveCharacterAction : MonoBehaviour
 	[SerializeField, HideInInspector]Rigidbody2D rig2d;
 
 	public int hp = 4;
+	public int dir = 1;
+
 
 	void Awake ()
 	{
@@ -37,14 +39,21 @@ public class MoveCharacterAction : MonoBehaviour
 			velocity.y = 5;
 		}
 		if (axis != 0){
-			spriteRenderer.flipX = axis < 0;
-            velocity.x = axis * 2;
+			//spriteRenderer.flipX = axis < 0;
+			dir = axis < 0 ? -1 : 1 ;
+
+			var scale = transform.localScale;
+			scale.x = Mathf.Abs(scale.x) * dir;
+			transform.localScale = scale;
+
+
+			velocity.x = axis * 2;
         }
         rig2d.velocity = velocity;
 
 
 		var distanceFromGround = Physics2D.Raycast (transform.position, Vector3.down, 1, groundMask);
-
+		//animator.Play("Stand");
 		// update animator parameters
 		animator.SetBool (hashIsCrouch, isDown);
 		animator.SetFloat (hashGroundDistance, distanceFromGround.distance == 0 ? 99 : distanceFromGround.distance - characterHeightOffset);

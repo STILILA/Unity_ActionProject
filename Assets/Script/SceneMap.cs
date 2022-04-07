@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -19,8 +20,10 @@ public class SceneMap : SceneBase
 
     public override void Start()
     {
+
         contactFilter2D = new ContactFilter2D();
-// contactFilter2D.useTriggers = true;
+        //contactFilter2D.SetLayerMask(9);
+        //contactFilter2D.useTriggers = true;
 
         string a = "string";
         string b = a;
@@ -56,6 +59,7 @@ public class SceneMap : SceneBase
     public override void FixedUpdate()
     {
         updateScreen();
+        
     }
 
     // 定期更新，另外其他物件的update也放在這(其他物件不寫Update())
@@ -79,34 +83,96 @@ public class SceneMap : SceneBase
     {
         interpreter.CustomUpdate();
     }
-    void updateCollider() {
+
+
+
+
+    void updateCollider()
+    {
         //foreach (GameObject ev in allObjects) {
         //          checkCollide(ev.gameObject);
         //}
         checkCollide(player);
 	}
 
+    void OnDrawGizmos() {
+      //  var obj = player;
+        var allBattler = new List<GameObject>();
+        allBattler.Add(player);
+        foreach (var e in events) {
+            allBattler.Add(e.gameObject);
+        }
+        foreach (var obj in allBattler) {
+            var selfCols = obj.GetCompsInChildrenNoRoot<BoxCollider2D>();
+          //  var dir = obj.GetComponent<MoveCharacterAction>().dir;
+
+            if (selfCols.Count > 0) {
+                foreach (var col in selfCols) {
+                    // 算法1 (需假設碰撞那個GameObject位置為0、縮放為1)
+                    var pos = new Vector2(obj.transform.localPosition.x, obj.transform.localPosition.y) + new Vector2(col.offset.x * obj.transform.localScale.x, col.offset.y * obj.transform.localScale.y);
+                    var size = new Vector2(Math.Abs(obj.transform.localScale.x), obj.transform.localScale.y) * col.size;
+                    //算法2 (系統會自己算出上面的答案，只是bounds.extents會是實際size除以2，要自己乘回去)
+                    //     pos = col.bounds.center;
+                    //   size = col.bounds.extents * 2;
+
+                    Gizmos.color = new Color(1, 1, 0);
+                    Gizmos.DrawWireCube(pos, size);
+
+                }
+
+            }
+        }
+    }
+
     void checkCollide(GameObject obj) {
 
-		//var colliders = Physics2D.OverlapBoxAll(player.transform.position, player.transform.localScale / 2, 0);
-		//foreach (var coler in colliders) {
-		//	if (coler.gameObject == obj) { continue; }
-		//	Debug.Log(coler.name);
-		//}
+        // var xy = obj.GetComponent<BoxCollider2D>().offset;
+        //   var wj = obj.GetComponent<BoxCollider2D>().size;
 
 
+      //  var colliders = Physics2D.OverlapBoxAll(player.transform.position, player.transform.localScale / 2, 0);
+        //foreach (var coler in colliders) {
+        //	if (coler.gameObject == obj) { continue; }
+        //	Debug.Log(coler.name);
+        //}
 
-		//BoxCollider2D[] selfCols = obj.GetComponents<BoxCollider2D>();
-		//if (selfCols.Length > 0) {
-  //          foreach (var col in selfCols) {
-  //              foreach (GameObject target in allObjects) {
-		//		BoxCollider2D[] targetCols = target.GetComponents<BoxCollider2D>();
-		//			var colCount = col.OverlapCollider(contactFilter2D, targetCols);
-		//			Debug.Log(target.name + ",   " + colCount);
-		//			Debug.Log("=========================");
-		//		}
+        //var selfCols = obj.GetComponentsInChildren<BoxCollider2D>().ToList<BoxCollider2D>();
+        var selfCols = obj.GetCompsInChildrenNoRoot<BoxCollider2D>();
+       // var dir = obj.GetComponent<MoveCharacterAction>().dir;
 
-		//	}
+
+        if (selfCols.Count > 0) {
+			foreach (var col in selfCols) {
+                // 算法1 (需假設碰撞那個GameObject位置為0、縮放為1)
+                var pos = new Vector2(obj.transform.localPosition.x, obj.transform.localPosition.y) + new Vector2(col.offset.x * obj.transform.localScale.x, col.offset.y * obj.transform.localScale.y);
+                var size = new Vector2(Math.Abs(obj.transform.localScale.x), obj.transform.localScale.y) * col.size;
+                //算法2 (系統會自己算出上面的答案，只是bounds.extents會是實際size除以2，要自己乘回去)
+                // pos = col.bounds.center;
+                // size = col.bounds.extents * 2;
+                var colliders = Physics2D.OverlapBoxAll(pos, size, 0).ToList();
+                Debug.Log($"{pos}, {size}");
+
+
+                colliders.RemoveAll((x) => x.gameObject.GetInstanceID() == obj.GetInstanceID() || x.gameObject.GetInstanceID() == col.gameObject.GetInstanceID() );
+
+
+                foreach (var tCol in colliders) {
+                    Debug.Log($"{col.name},{pos},{size} => {tCol.name}");
+
+                }
+
+                //  Debug.Log($"{col.name},{col.offset},{col.size}");
+                //   Debug.Log("=================");
+
+                //		foreach (GameObject target in allObjects) {
+                //			BoxCollider2D[] targetCols = target.GetComponents<BoxCollider2D>();
+                //                  var colCount = col.OverlapCollider(contactFilter2D, targetCols);
+                //			//var colCount = col.OverlapCollider(contactFilter2D, targetCols);
+                //			Debug.Log(target.name + ",   " + colCount);
+                //			Debug.Log("=========================");
+            }
+
+		}
 		//}
 
 	}
