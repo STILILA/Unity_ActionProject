@@ -96,26 +96,37 @@ public class SceneMap : SceneBase
 	}
 
     void OnDrawGizmos() {
-      //  var obj = player;
-        var allBattler = new List<GameObject>();
-        allBattler.Add(player);
-        foreach (var e in events) {
-            allBattler.Add(e.gameObject);
-        }
-        foreach (var obj in allBattler) {
+        var allBattlers = new List<GameObject>();
+        allBattlers.Add(player);
+        foreach (var ev in events) { allBattlers.Add(ev.gameObject); }
+
+        foreach (var obj in allBattlers) {
             var selfCols = obj.GetCompsInChildrenNoRoot<BoxCollider2D>();
           //  var dir = obj.GetComponent<MoveCharacterAction>().dir;
 
             if (selfCols.Count > 0) {
                 foreach (var col in selfCols) {
                     // 算法1 (需假設碰撞那個GameObject位置為0、縮放為1)
-                    var pos = new Vector2(obj.transform.localPosition.x, obj.transform.localPosition.y) + new Vector2(col.offset.x * obj.transform.localScale.x, col.offset.y * obj.transform.localScale.y);
-                    var size = new Vector2(Math.Abs(obj.transform.localScale.x), obj.transform.localScale.y) * col.size;
-                    //算法2 (系統會自己算出上面的答案，只是bounds.extents會是實際size除以2，要自己乘回去)
-                    //     pos = col.bounds.center;
-                    //   size = col.bounds.extents * 2;
+                    // var pos = new Vector2(obj.transform.localPosition.x, obj.transform.localPosition.y) + new Vector2(col.offset.x * obj.transform.localScale.x, col.offset.y * obj.transform.localScale.y);
+                    //var size = new Vector2(Math.Abs(obj.transform.localScale.x), obj.transform.localScale.y) * col.size;
 
-                    Gizmos.color = new Color(1, 1, 0);
+                    //算法2 (系統會自己算出上面的答案，只是bounds.extents會是實際size除以2，要自己乘回去)
+                    var pos = col.bounds.center;
+                    var size = col.bounds.extents * 2;
+                    switch (col.gameObject.layer) {
+                        case 9:
+                            Gizmos.color = new Color(0, 0, 1);
+                            break;
+                        case 10:
+                            Gizmos.color = new Color(1, 0, 0);
+                            break;
+                        default:
+                            Gizmos.color = new Color(1, 1, 1);
+                            break;
+
+                        
+                    } 
+                    
                     Gizmos.DrawWireCube(pos, size);
 
                 }
@@ -144,22 +155,20 @@ public class SceneMap : SceneBase
         if (selfCols.Count > 0) {
 			foreach (var col in selfCols) {
                 // 算法1 (需假設碰撞那個GameObject位置為0、縮放為1)
-                var pos = new Vector2(obj.transform.localPosition.x, obj.transform.localPosition.y) + new Vector2(col.offset.x * obj.transform.localScale.x, col.offset.y * obj.transform.localScale.y);
-                var size = new Vector2(Math.Abs(obj.transform.localScale.x), obj.transform.localScale.y) * col.size;
+               // var pos = new Vector2(obj.transform.localPosition.x, obj.transform.localPosition.y) + new Vector2(col.offset.x * obj.transform.localScale.x, col.offset.y * obj.transform.localScale.y);
+              //  var size = new Vector2(Math.Abs(obj.transform.localScale.x), obj.transform.localScale.y) * col.size;
                 //算法2 (系統會自己算出上面的答案，只是bounds.extents會是實際size除以2，要自己乘回去)
-                // pos = col.bounds.center;
-                // size = col.bounds.extents * 2;
+                var pos = col.bounds.center;
+                var size = col.bounds.extents * 2;
                 var colliders = Physics2D.OverlapBoxAll(pos, size, 0).ToList();
-                Debug.Log($"{pos}, {size}");
+            //    Debug.Log($"{pos}, {size}");
 
+             //   colliders.RemoveAll((x) => x.gameObject.GetInstanceID() == obj.GetInstanceID() || x.gameObject.GetInstanceID() == col.gameObject.GetInstanceID() );
 
-                colliders.RemoveAll((x) => x.gameObject.GetInstanceID() == obj.GetInstanceID() || x.gameObject.GetInstanceID() == col.gameObject.GetInstanceID() );
+                //foreach (var tCol in colliders) {
+                //    Debug.Log($"{col.name},{pos},{size} => {tCol.name}");
 
-
-                foreach (var tCol in colliders) {
-                    Debug.Log($"{col.name},{pos},{size} => {tCol.name}");
-
-                }
+                //}
 
                 //  Debug.Log($"{col.name},{col.offset},{col.size}");
                 //   Debug.Log("=================");

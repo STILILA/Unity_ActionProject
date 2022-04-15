@@ -38,7 +38,7 @@ public class MoveCharacterAction : MonoBehaviour
 		if (Input.GetButtonDown ("Jump")) {
 			velocity.y = 5;
 		}
-		if (axis != 0){
+		if (axis != 0 && !isDown){
 			//spriteRenderer.flipX = axis < 0;
 			dir = axis < 0 ? -1 : 1 ;
 
@@ -48,17 +48,26 @@ public class MoveCharacterAction : MonoBehaviour
 
 
 			velocity.x = axis * 2;
-        }
+        } else {
+			velocity.x = 0;
+		}
+
+	//	if (isDown && !animator.GetCurrentAnimatorStateInfo(0).IsName("Crouch")) {
+	//		animator.Play("Crouch");
+	//	}
+
         rig2d.velocity = velocity;
 
 
 		var distanceFromGround = Physics2D.Raycast (transform.position, Vector3.down, 1, groundMask);
 		//animator.Play("Stand");
 		// update animator parameters
-		animator.SetBool (hashIsCrouch, isDown);
+		
 		animator.SetFloat (hashGroundDistance, distanceFromGround.distance == 0 ? 99 : distanceFromGround.distance - characterHeightOffset);
 		animator.SetFloat (hashFallSpeed, rig2d.velocity.y);
-		animator.SetFloat (hashSpeed, Mathf.Abs (axis));
+		animator.SetFloat(hashSpeed, Mathf.Abs(axis));
+		animator.SetBool(hashIsCrouch, isDown);
+
 
 	}
     
