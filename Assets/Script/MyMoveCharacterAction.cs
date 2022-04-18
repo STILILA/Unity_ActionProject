@@ -27,6 +27,10 @@ public class MyMoveCharacterAction : MonoBehaviour
 	public float speedX = 5;
 	public float fricX = 2;
 	public float jumpPower = 5;
+	public string currentState = "stand";
+	private bool canCancel;
+
+	readonly List<string> atkState = new List<string>() { "atk1", "atk2", "atk3" };
 
 
 	void Awake ()
@@ -45,22 +49,24 @@ public class MyMoveCharacterAction : MonoBehaviour
 
 		bool isInput = false;
 
-		var currentStateInfo = animator.GetCurrentAnimatorStateInfo(0);
+		AnimatorStateInfo currentStateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
 		Vector2 velocity = rig2d.velocity;
-		if (Input.GetKey(KeyCode.LeftArrow)) {
-			dir = -1;
-			if (!currentStateInfo.IsName("run") && !onAir) { animator.Play("run"); }
-			isInput = true;
-			velocity.x = speedX * dir;
+		if (!IsAtk()) {
+			if (Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.DownArrow)) {
+				dir = -1;
+				if (!onAir) { ChangeState("run"); }
+				isInput = true;
+				velocity.x = speedX * dir;
+			}
+			if (Input.GetKey(KeyCode.RightArrow) && !Input.GetKey(KeyCode.DownArrow)) {
+				dir = 1;
+				if (!onAir) { ChangeState("run"); }
+				isInput = true;
+				velocity.x = speedX * dir;
+			}
 		}
-		if (Input.GetKey(KeyCode.RightArrow)) {
-			dir = 1;
-			if (!currentStateInfo.IsName("run") && !onAir) { animator.Play("run"); }
-			isInput = true;
-			velocity.x = speedX * dir;
-		}
-		
+
 
 		if (velocity.x > 0) {
 			velocity.x = Mathf.Max(velocity.x - fricX, 0);
@@ -71,39 +77,120 @@ public class MyMoveCharacterAction : MonoBehaviour
 		var scale = transform.localScale;
 		scale.x = Mathf.Abs(scale.x) * dir;
 		transform.localScale = scale;
-
-		if (Input.GetKey(KeyCode.DownArrow)) {
-			if (!currentStateInfo.IsName("crouch") && !onAir) { animator.Play("crouch"); }
-			isInput = true;
-		} else {
-			if (currentStateInfo.IsName("crouch")) {
-				animator.Play("stand");
+		if (!IsAtk()) {
+			if (Input.GetKey(KeyCode.DownArrow)) {
+				if (!onAir) { ChangeState("crouch"); }
+				isInput = true;
+			}
+			else {
+				if (currentStateInfo.IsName("crouch")) {
+					ChangeState("stand");
+				}
+			}
+		}
+		if (!IsAtk() || IsCanCancel()) {
+			if (Input.GetKeyDown(KeyCode.UpArrow)) {
+				velocity.y = 5;
+				ChangeState("jump");
+				isInput = true;
 			}
 		}
 
-		if (Input.GetKeyDown(KeyCode.UpArrow)) {
-			velocity.y = 5;
-			animator.Play("jump");
+
+		
+
+		// 
+		if (Input.GetKeyDown(KeyCode.Z)) {
+			if (!onAir) {
+				switch (currentState) {
+					case "atk1":
+						DoAction("atk2");
+						break;
+					case "atk2":
+						DoAction("atk3");
+						break;
+					default:
+						DoAction("atk1");
+						break;
+				}
+				
+			}
+
 			isInput = true;
 		}
 
-        rig2d.velocity = velocity;
+		rig2d.velocity = velocity;
 
-		if (!onAir && !isInput && !currentStateInfo.IsName("stand")) {
-			animator.Play("stand");
+		if (!IsAtk()) {
+			if (!onAir && !isInput) {
+				ChangeState("stand");
+			}
+			if (onAir) {
+				ChangeState("jump");
+			}
 		}
-		if (onAir && !currentStateInfo.IsName("jump")) {
-			animator.Play("jump");
-		}
+
+
+
+
+
 
 		// 目前動畫播完一輪
-		if (currentStateInfo.normalizedTime >= 1) {
-			Debug.Log(animator.GetCurrentAnimatorClipInfo(0)[0].clip.name + " is End"); // 獲取個目前動畫名稱真的老木麻煩
-		}
+		//if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1) { // stateInfo要重拿，哭啊
+		//	Debug.Log(animator.GetCurrentAnimatorClipInfo(0)[0].clip.name + " is End"); // 獲取個目前動畫名稱真的老木麻煩
+		//	ActionEnd();
+		//}
 
 
 	}
     
+
+	void ChangeState(string stateName) {
+		
+		if (currentState != stateName) {
+			canCancel = false;
+			animator.Play(stateName);
+			animator.Update(0);  // 這個要加，不然內部參數不會馬上改變(還是舊的動畫)
+			currentState = stateName;
+		}
+	}
+
+	void DoAction(string stateName) {
+		if (currentState != stateName && (IsCanCancel() || !IsAtk())) {
+			ChangeState(stateName);
+		}
+		
+	}
+
+	void SetCanCancel() {
+		canCancel = true;
+	}
+
+	bool IsCanCancel() {
+		return canCancel;
+	}
+
+	bool IsAtk() {
+		return atkState.Contains(currentState);
+	}
+
+	void ActionEnd() {
+		switch (currentState) {
+			case "atk1":
+				ChangeState("stand");
+				break;
+			case "atk2":
+				ChangeState("stand");
+				break;
+			case "atk3":
+				ChangeState("stand");
+				break;
+			default:
+				break;
+		}
+		canCancel = false;
+	}
+
 
     //void OnTriggerEnter2D(Collider2D other)
     //{

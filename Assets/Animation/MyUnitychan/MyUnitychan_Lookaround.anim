@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Unitychan_Attack7
+  m_Name: MyUnitychan_Lookaround
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -20,25 +20,25 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 21300000, guid: 5ca1759ee886940478d767a85a5330cb, type: 3}
+      value: {fileID: 21300000, guid: 48fa5377d4a35421486120280286f174, type: 3}
     - time: 0.083333336
-      value: {fileID: 21300000, guid: f50a7f1fc66e04b07860f8f8d9ebc4f6, type: 3}
+      value: {fileID: 21300000, guid: 772808dc9ef124f6d91c7fd761db21b9, type: 3}
     - time: 0.16666667
-      value: {fileID: 21300000, guid: 873eabcc39d104f3288cb882d20240aa, type: 3}
+      value: {fileID: 21300000, guid: a691f093300584e929261ca6a6de69ca, type: 3}
     - time: 0.25
-      value: {fileID: 21300000, guid: 15605b2dce5d442b2bd41bb393df4245, type: 3}
+      value: {fileID: 21300000, guid: c0813e0dfb7964499bed6a657d51fe2e, type: 3}
     - time: 0.33333334
-      value: {fileID: 21300000, guid: 560d7fde1b28e4c0ea0d9ae4d9b61917, type: 3}
+      value: {fileID: 21300000, guid: 954ca6e2af2044ce9b8c20ea8c4d4c07, type: 3}
     - time: 0.41666666
-      value: {fileID: 21300000, guid: 403c7436e1d714a8cb640bafe29ced88, type: 3}
+      value: {fileID: 21300000, guid: c2d6d787d56524f5fbf820116b721a65, type: 3}
     - time: 0.5
-      value: {fileID: 21300000, guid: 1e5546644ea174d60b9f2356561fb09b, type: 3}
+      value: {fileID: 21300000, guid: fa0190884174c4b47900c6f5adabca76, type: 3}
     - time: 0.5833333
-      value: {fileID: 21300000, guid: 4d7b6989d1610459c86d3edfd9ca0d33, type: 3}
+      value: {fileID: 21300000, guid: 0a8ebec202473484789997441822c311, type: 3}
     - time: 0.6666667
-      value: {fileID: 21300000, guid: 04307fde9ba7b4ab2961f8c65206ceea, type: 3}
+      value: {fileID: 21300000, guid: aa5871df57df24134a469121701a7b01, type: 3}
     - time: 0.75
-      value: {fileID: 21300000, guid: 1f7c962b580fd4d18885625b24a0469f, type: 3}
+      value: {fileID: 21300000, guid: 408934826d17a42ff9128abe021711b3, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -58,16 +58,16 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: 21300000, guid: 5ca1759ee886940478d767a85a5330cb, type: 3}
-    - {fileID: 21300000, guid: f50a7f1fc66e04b07860f8f8d9ebc4f6, type: 3}
-    - {fileID: 21300000, guid: 873eabcc39d104f3288cb882d20240aa, type: 3}
-    - {fileID: 21300000, guid: 15605b2dce5d442b2bd41bb393df4245, type: 3}
-    - {fileID: 21300000, guid: 560d7fde1b28e4c0ea0d9ae4d9b61917, type: 3}
-    - {fileID: 21300000, guid: 403c7436e1d714a8cb640bafe29ced88, type: 3}
-    - {fileID: 21300000, guid: 1e5546644ea174d60b9f2356561fb09b, type: 3}
-    - {fileID: 21300000, guid: 4d7b6989d1610459c86d3edfd9ca0d33, type: 3}
-    - {fileID: 21300000, guid: 04307fde9ba7b4ab2961f8c65206ceea, type: 3}
-    - {fileID: 21300000, guid: 1f7c962b580fd4d18885625b24a0469f, type: 3}
+    - {fileID: 21300000, guid: 48fa5377d4a35421486120280286f174, type: 3}
+    - {fileID: 21300000, guid: 772808dc9ef124f6d91c7fd761db21b9, type: 3}
+    - {fileID: 21300000, guid: a691f093300584e929261ca6a6de69ca, type: 3}
+    - {fileID: 21300000, guid: c0813e0dfb7964499bed6a657d51fe2e, type: 3}
+    - {fileID: 21300000, guid: 954ca6e2af2044ce9b8c20ea8c4d4c07, type: 3}
+    - {fileID: 21300000, guid: c2d6d787d56524f5fbf820116b721a65, type: 3}
+    - {fileID: 21300000, guid: fa0190884174c4b47900c6f5adabca76, type: 3}
+    - {fileID: 21300000, guid: 0a8ebec202473484789997441822c311, type: 3}
+    - {fileID: 21300000, guid: aa5871df57df24134a469121701a7b01, type: 3}
+    - {fileID: 21300000, guid: 408934826d17a42ff9128abe021711b3, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
@@ -78,7 +78,7 @@ AnimationClip:
     m_Level: 0
     m_CycleOffset: 0
     m_HasAdditiveReferencePose: 0
-    m_LoopTime: 0
+    m_LoopTime: 1
     m_LoopBlend: 0
     m_LoopBlendOrientation: 0
     m_LoopBlendPositionY: 0
