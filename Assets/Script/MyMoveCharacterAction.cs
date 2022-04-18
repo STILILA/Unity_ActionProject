@@ -174,7 +174,9 @@ public class MyMoveCharacterAction : MonoBehaviour
 		return atkState.Contains(currentState);
 	}
 
-	void ActionEnd() {
+
+	// 動畫事件
+	void AniEV_ActionEnd() {
 		switch (currentState) {
 			case "atk1":
 				ChangeState("stand");
@@ -190,7 +192,9 @@ public class MyMoveCharacterAction : MonoBehaviour
 		}
 		canCancel = false;
 	}
-
+	void AniEV_SetCanCancel() {
+		SetCanCancel();
+	}
 
     //void OnTriggerEnter2D(Collider2D other)
     //{
