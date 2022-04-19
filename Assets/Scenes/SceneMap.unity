@@ -4315,6 +4315,7 @@ GameObject:
   - component: {fileID: 85573079604438855}
   - component: {fileID: 85573079604438856}
   - component: {fileID: 85573079604438859}
+  - component: {fileID: 85573079604438862}
   - component: {fileID: 85573079604438860}
   - component: {fileID: 85573079604438861}
   m_Layer: 0
@@ -4357,19 +4358,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d650d6c8b5c9914ba2c56d3ed338753, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 256
-  animator: {fileID: 0}
-  spriteRenderer: {fileID: 0}
-  rig2d: {fileID: 0}
-  groundChecker: {fileID: 728761919}
   hp: 4
   dir: 1
   speedX: 6.4
   fricX: 2
   jumpPower: 5
-  currentState: stand
+  motion: {fileID: 0}
 --- !u!114 &85573079604438861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4391,6 +4385,26 @@ MonoBehaviour:
   rig2d: {fileID: 0}
   hp: 4
   dir: 1
+--- !u!114 &85573079604438862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 85573079604438858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 848ddd58dffba7c4193464dfe7e5023e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 256
+  animator: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  groundChecker: {fileID: 728761919}
+  currentState: stand
+  onAir: 0
 --- !u!114 &445886594906944139
 MonoBehaviour:
   m_ObjectHideFlags: 0
