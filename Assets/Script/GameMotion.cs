@@ -20,7 +20,8 @@ public class GameMotion : MonoBehaviour
 	public float fricX = 2;
 	public float jumpPower = 5;
 
-
+	public List<BoxCollider2D> atkRects = new List<BoxCollider2D>();
+	public List<BoxCollider2D> bodyRects = new List<BoxCollider2D>();
 	//
 
 	readonly List<string> atkState = new List<string>() { "atk1", "atk2", "atk3" };
@@ -188,8 +189,45 @@ public class GameMotion : MonoBehaviour
 	}
 
 
+	public void SetRects(List<BoxCollider2D> rects, int layer) {
+		if (layer == 9) {
+			bodyRects.Clear();
+			foreach (var rect in rects) {
+				bodyRects.Add(rect);
+			}
+		} else {
+			atkRects.Clear();
+			foreach (var rect in rects) {
+				atkRects.Add(rect);
+			}
+		}
+	}
+
+	public void ClearRects(List<BoxCollider2D> rects = null, int layer = -1) {
+		if (layer == -1) {
+			atkRects.Clear();
+			bodyRects.Clear();
+		} else {
+			if (rects == null) { return; }
+
+
+			if (layer == 9) {
+				foreach (var rect in rects) {
+					bodyRects.Remove(rect);
+				}
+			} else {
+				foreach (var rect in rects) {
+					atkRects.Remove(rect);
+				}
+			}
+		}
+
+	}
+
+
 	// 動畫事件
 	void AniEV_ActionEnd() {
+		ClearRects();
 		switch (currentState) {
 			case "atk1":
 				ChangeState("stand");
