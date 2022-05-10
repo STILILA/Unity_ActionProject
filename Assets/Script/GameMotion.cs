@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class GameMotion : MonoBehaviour
 {
@@ -52,6 +53,10 @@ public class GameMotion : MonoBehaviour
 		rig2d.velocity = velocity;
 
 
+	}
+
+	void ChangeSprite(string filename) {
+		
 	}
 
 
