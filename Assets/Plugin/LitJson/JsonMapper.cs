@@ -581,6 +581,14 @@ namespace LitJson
                     writer.Write ((decimal) obj);
                 };
 
+            #region  litjson support float  modified by codingriver wangguoqing 2018-10-29
+            base_exporters_table[typeof(float)] =
+                delegate (object obj, JsonWriter writer) {
+                    writer.Write((float) obj);
+                };
+            #endregion
+
+
             base_exporters_table[typeof (sbyte)] =
                 delegate (object obj, JsonWriter writer) {
                     writer.Write (Convert.ToInt32 ((sbyte) obj));

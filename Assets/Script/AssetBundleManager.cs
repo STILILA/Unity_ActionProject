@@ -49,6 +49,7 @@ public class AssetBundleManager {
 	static Dictionary<string, AssetBundle> bundleList = new Dictionary<string, AssetBundle>();
 
 	static public AssetBundle LoadBundle(string abName) {
+		
 		var ab = AssetBundle.LoadFromFile(Path.Combine($"{folder}/", abName));
 		if (ab) {
 			bundleList[abName] = ab;

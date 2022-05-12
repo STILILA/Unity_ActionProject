@@ -27,12 +27,16 @@ public class Global : MonoBehaviour
     {
         Audio = _audio;
         DontDestroyOnLoad(this.gameObject);        // 轉場時不釋放
+        AssetBundleManager.LoadBundle("unitychan");
+        QualitySettings.vSyncCount = 0;   // 把垂直同步關掉
+        Application.targetFrameRate = 60; // fps為60
     }
 
     void Start()
     {
         msgObj = GameObject.Find("Message_System");
         if (msgObj) { msgObj.SetActive(false); }
+        
     }
 
     private void FixedUpdate() 

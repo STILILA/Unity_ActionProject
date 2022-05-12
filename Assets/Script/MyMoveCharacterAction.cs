@@ -22,7 +22,7 @@ public class MyMoveCharacterAction : MonoBehaviour
 	//	Debug.Log(onAir);
 
 		bool isInput = false;
-
+		var dir = 0;
 		//AnimatorStateInfo currentStateInfo = motion.animator.GetCurrentAnimatorStateInfo(0);
 
 		
@@ -41,6 +41,14 @@ public class MyMoveCharacterAction : MonoBehaviour
 		
 
 		if (Input.GetKey(KeyCode.DownArrow)) {
+
+			if (Input.GetKey(KeyCode.RightArrow)){
+				dir = 1;
+			}
+			if (Input.GetKey(KeyCode.LeftArrow)) {
+				dir = -1;
+			}
+
 			motion.DoCrouch(dir);
 			isInput = true;
 		}
@@ -58,6 +66,11 @@ public class MyMoveCharacterAction : MonoBehaviour
 			motion.DoAction_Z();
 			isInput = true;
 		}
+		if (Input.GetKey(KeyCode.X)) {
+			motion.DoAction_X();
+			isInput = true;
+		}
+
 
 		if (!isInput) {
 			motion.DoNoInput();

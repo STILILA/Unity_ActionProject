@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 819468641
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: unitychan
+      Dependencies: {}
