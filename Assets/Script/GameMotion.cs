@@ -17,9 +17,9 @@ public class GameMotion : MonoBehaviour
 
 	public string startState = "stand";
 	public string currentState = "stand";
+	public int currentFrameNo = 0;
 	public string spriteBundleName = "unitychan";
 	public bool canCancel = false;
-	public bool canSelfCancel = false;
 	public bool onAir;
 	
 
@@ -62,6 +62,17 @@ public class GameMotion : MonoBehaviour
 		animator = GetComponent<Animator>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		rig2d = GetComponent<Rigidbody2D>();
+
+		if (!tempBody.GetComponent<MotionGetter>()) {
+			tempBody.AddComponent<MotionGetter>();
+		}
+		tempBody.GetComponent<MotionGetter>().motion = this;
+		if (!tempAtk.GetComponent<MotionGetter>()) {
+			tempAtk.AddComponent<MotionGetter>();
+		}
+		tempAtk.GetComponent<MotionGetter>().motion = this;
+
+
 		SetupAnime();
 	}
 
@@ -71,6 +82,7 @@ public class GameMotion : MonoBehaviour
 	}
 
 	public virtual void SetupAnime() {
+
 		var animes = @"{
 			'stand':[
 				{'pic':'Unitychan_Idle_1', 'wait':8, 'nextNo':1, 'body':[[-0.03774764, -0.02141318, 0.2443573, 0.4237701]]},
@@ -191,8 +203,6 @@ public class GameMotion : MonoBehaviour
 }";
 
 		this.stateData = JsonMapper.ToObject(animes);
-
-
 	}
 
 
@@ -201,6 +211,19 @@ public class GameMotion : MonoBehaviour
 		UpdateMotion();
 
 		onAir = IsOnAir();
+
+		if (currentState == "damage1" || currentState == "damage2") {
+			if (currentFrameNo == 1) {
+				if (onAir) {
+					ChangeState("jumpFall");
+				} else {
+					ChangeState("stand");
+				}
+				
+			}
+		}
+
+
 
 		Vector2 velocity = rig2d.velocity;
 
@@ -283,12 +306,16 @@ public class GameMotion : MonoBehaviour
 			}
 			// 都沒指定的情況
 			else {
-				UpdateFrame(stateData[currentState][nextFrameNo]);
+				UpdateFrame(nextFrameNo);
 			}
 		}
 	}
 
-	void UpdateFrame(JsonData frameData) {
+	void UpdateFrame(int frameNo) {
+
+		currentFrameNo = frameNo;
+		var frameData = stateData[currentState][frameNo];
+
 		foreach (var param in frameData.Keys) {
 			switch (param) {
 				case "pic":
@@ -305,9 +332,6 @@ public class GameMotion : MonoBehaviour
 					break;
 				case "nextMethod":
 					nextMethod = (string) frameData[param];
-					break;
-				case "selfCancel":
-					SetCanSelfCancel();
 					break;
 				case "cancel":
 					SetCanCancel();
@@ -356,15 +380,14 @@ public class GameMotion : MonoBehaviour
 		wait = 0;
 		stateTime = 0;
 		canCancel = false;
-		canSelfCancel = false;
 		currentState = stateName;
-		UpdateFrame(stateData[currentState][nextFrameNo]);
+		UpdateFrame(nextFrameNo);
 		//}
 	}
 
 
-	public void DoAction(string stateName) {
-		if ((currentState != stateName || IsCanSelfCancel()) && (!IsAtk() || IsCanCancel())) {
+	public void DoAction(string stateName, bool forceCancel = false) {
+		if ((currentState != stateName || forceCancel) && (!IsAtk() || IsCanCancel())) {
 			ChangeState(stateName);
 		}
 	}
@@ -380,19 +403,12 @@ public class GameMotion : MonoBehaviour
 	void SetCanCancel() {
 		canCancel = true;
 	}
-	void SetCanSelfCancel() {
-		canSelfCancel = true;
-	}
+
 
 	public bool IsOnAir() {
 		return !Physics2D.OverlapBox(groundChecker.bounds.center, groundChecker.bounds.extents * 2, 0, groundMask);
 	}
 
-
-
-	public bool IsCanSelfCancel() {
-		return canSelfCancel;
-	}
 	public bool IsCanCancel() {
 		return canCancel;
 	}
@@ -591,7 +607,7 @@ public class GameMotion : MonoBehaviour
 	public virtual void DoJump(int dir) {
 		if (onAir) { return; }
 		if (currentState == "jumpStart") { return; }
-		if (!IsAtk() || IsCanCancel() || IsCanSelfCancel()) {
+		if (!IsAtk() || IsCanCancel()) {
 			ChangeState("jumpStart");
 		}
 	}
@@ -631,7 +647,7 @@ public class GameMotion : MonoBehaviour
 			default:
 				break;
 		}
-		canCancel = canSelfCancel = false;
+		canCancel = false;
 	}
 
 	// 動畫事件

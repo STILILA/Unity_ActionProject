@@ -53,6 +53,7 @@ public class AssetBundleManager {
 		var ab = AssetBundle.LoadFromFile(Path.Combine($"{folder}/", abName));
 		if (ab) {
 			bundleList[abName] = ab;
+			Debug.Log($"bundle¡G{abName}¸ü¤J§¹¦¨");
 			return ab;
 		} else {
 			return null;

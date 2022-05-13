@@ -1824,6 +1824,63 @@ Transform:
   m_Father: {fileID: 85573079604438853}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &372964360
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 372964361}
+  - component: {fileID: 372964362}
+  m_Layer: 0
+  m_Name: GroundChecker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &372964361
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 372964360}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.01, y: -0.2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 0}
+  m_Children: []
+  m_Father: {fileID: 1812344768}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &372964362
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 372964360}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.009743072, y: -0.02887407}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.18426372, y: 0.065047815}
+  m_EdgeRadius: 0
 --- !u!1 &462807947
 GameObject:
   m_ObjectHideFlags: 0
@@ -2992,6 +3049,36 @@ Transform:
   m_Father: {fileID: 85573079604438853}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &935506280
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 935506281}
+  m_Layer: 10
+  m_Name: TokoAtk
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &935506281
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 935506280}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1812344768}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &978067541
 GameObject:
   m_ObjectHideFlags: 0
@@ -3441,7 +3528,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1812344768}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1173490532
 BoxCollider2D:
@@ -4060,18 +4147,6 @@ Transform:
   m_Father: {fileID: 1060174887}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1793156795
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1812344762}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97f481a5aa08f8646b624c0523fb5109, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1799260919
 GameObject:
   m_ObjectHideFlags: 0
@@ -4112,9 +4187,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1812344768}
   - component: {fileID: 1812344767}
+  - component: {fileID: 1812344764}
   - component: {fileID: 1812344766}
+  - component: {fileID: 1812344763}
   - component: {fileID: 7844932278031789780}
-  - component: {fileID: 1793156795}
   m_Layer: 9
   m_Name: TokoNPC
   m_TagString: NPC
@@ -4122,6 +4198,65 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1812344763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1812344762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 145cd2eaa96c597439165f4a59d70c57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 256
+  animator: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  groundChecker: {fileID: 372964362}
+  startState: stand
+  currentState: stand
+  currentFrameNo: 0
+  spriteBundleName: unitychan
+  canCancel: 0
+  onAir: 0
+  walkSpeed: 3
+  runSpeed: 5
+  airSpeed: 3
+  fricX: 2
+  jumpPower: 5
+  tempBody: {fileID: 1173490530}
+  tempAtk: {fileID: 935506280}
+  speedX: 0
+  speedY: 0
+  gravity: -0.2
+  gravityMax: -9
+  dir: 1
+  bodyRects: []
+  atkRects: []
+--- !u!50 &1812344764
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1812344762}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 0
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!95 &1812344766
 Animator:
   serializedVersion: 3
@@ -4130,7 +4265,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1812344762}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 22100000, guid: 1a2d124a0cefd41fa9bd4e5e85976dc0, type: 2}
   m_CullingMode: 0
@@ -4203,7 +4338,9 @@ Transform:
   m_LocalPosition: {x: -0.56, y: -2.26, z: 0.020507812}
   m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children:
+  - {fileID: 372964361}
   - {fileID: 1173490531}
+  - {fileID: 935506281}
   m_Father: {fileID: 1098926905}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4726,9 +4863,9 @@ MonoBehaviour:
   groundChecker: {fileID: 728761919}
   startState: stand
   currentState: stand
+  currentFrameNo: 0
   spriteBundleName: unitychan
   canCancel: 0
-  canSelfCancel: 0
   onAir: 0
   walkSpeed: 3
   runSpeed: 5

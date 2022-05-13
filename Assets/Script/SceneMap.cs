@@ -15,7 +15,7 @@ public class SceneMap : SceneBase
     public GameInterpreter interpreter;
     GameMessage msgObj;
     ContactFilter2D contactFilter2D;
-    List<GameObject> allObjects;
+    List<GameMotion> allBattlers = new List<GameMotion>();
 
 
     public override void Start()
@@ -25,12 +25,12 @@ public class SceneMap : SceneBase
         //contactFilter2D.SetLayerMask(9);
         //contactFilter2D.useTriggers = true;
 
-        string a = "string";
-        string b = a;
-        b = b.Remove(0, 3);
-        Debug.Log(a);
-        Debug.Log(b);
-        int c = 5;
+        //string a = "string";
+        //string b = a;
+        //b = b.Remove(0, 3);
+        //Debug.Log(a);
+        //Debug.Log(b);
+        //int c = 5;
 
 
         // super
@@ -41,10 +41,10 @@ public class SceneMap : SceneBase
         gameScreen.FadeIn(Color.black, 30);
 
         // 
-        allObjects = new List<GameObject>();
-        allObjects.Add(player);
-        foreach (var ev in events) { allObjects.Add(ev.gameObject); }
-
+        allBattlers.Add(player.GetComponent<GameMotion>());
+        foreach (var ev in events) { allBattlers.Add(ev.GetComponent<GameMotion>()); }
+        allBattlers.RemoveAll(x => x == null); // 移除null
+        Debug.Log(allBattlers.Count);
 
 
         Global.Audio.PlayBGM(bgm);
@@ -89,10 +89,10 @@ public class SceneMap : SceneBase
 
     void updateCollider()
     {
-        //foreach (GameObject ev in allObjects) {
-        //          checkCollide(ev.gameObject);
-        //}
-        checkCollide(player);
+        foreach (var battler in allBattlers) {
+           checkCollide(battler);
+        }
+      //  checkCollide(player);
 	}
 
     void OnDrawGizmos() {
@@ -135,39 +135,31 @@ public class SceneMap : SceneBase
         }
     }
 
-    void checkCollide(GameObject obj) {
-
-        // var xy = obj.GetComponent<BoxCollider2D>().offset;
-        //   var wj = obj.GetComponent<BoxCollider2D>().size;
+    void checkCollide(GameMotion atker) {
 
 
-      //  var colliders = Physics2D.OverlapBoxAll(player.transform.position, player.transform.localScale / 2, 0);
-        //foreach (var coler in colliders) {
-        //	if (coler.gameObject == obj) { continue; }
-        //	Debug.Log(coler.name);
-        //}
-
-        //var selfCols = obj.GetComponentsInChildren<BoxCollider2D>().ToList<BoxCollider2D>();
-        var selfCols = obj.GetCompsInChildrenNoRoot<BoxCollider2D>();
-       // var dir = obj.GetComponent<MoveCharacterAction>().dir;
+        var atkerRects = atker.atkRects;
 
 
-        if (selfCols.Count > 0) {
-			foreach (var col in selfCols) {
+        if (atkerRects.Count > 0) {
+			foreach (var atkRect in atkerRects) {
                 // 算法1 (需假設碰撞那個GameObject位置為0、縮放為1)
-               // var pos = new Vector2(obj.transform.localPosition.x, obj.transform.localPosition.y) + new Vector2(col.offset.x * obj.transform.localScale.x, col.offset.y * obj.transform.localScale.y);
-              //  var size = new Vector2(Math.Abs(obj.transform.localScale.x), obj.transform.localScale.y) * col.size;
+                // var pos = new Vector2(atker.transform.localPosition.x, atker.transform.localPosition.y) + new Vector2(atkRect.offset.x * atker.transform.localScale.x, atkRect.offset.y * atker.transform.localScale.y);
+                //  var size = new Vector2(Math.Abs(atker.transform.localScale.x), atker.transform.localScale.y) * atkRect.size;
                 //算法2 (系統會自己算出上面的答案，只是bounds.extents會是實際size除以2，要自己乘回去)
-                var pos = col.bounds.center;
-                var size = col.bounds.extents * 2;
+                var pos = atkRect.bounds.center;
+                var size = atkRect.bounds.extents * 2;
                 var colliders = Physics2D.OverlapBoxAll(pos, size, 0).ToList();
             //    Debug.Log($"{pos}, {size}");
 
-             //   colliders.RemoveAll((x) => x.gameObject.GetInstanceID() == obj.GetInstanceID() || x.gameObject.GetInstanceID() == col.gameObject.GetInstanceID() );
+                colliders.RemoveAll((x) => (x.gameObject.layer != 9) || !x.GetComponent<MotionGetter>() || (x.GetComponent<MotionGetter>().motion == atker) || (x.transform.parent.GetInstanceID() == atker.transform.GetInstanceID()));
 
-                //foreach (var tCol in colliders) {
-                //    Debug.Log($"{col.name},{pos},{size} => {tCol.name}");
+                foreach (var targetRect in colliders) {
+                    Debug.Log($"{atkRect.transform.parent.name} 攻擊到 {targetRect.name}");
 
+                    // 測試
+                    var tMotion = targetRect.GetComponent<MotionGetter>().motion;
+                    tMotion.ChangeState("damage1");
                 //}
 
                 //  Debug.Log($"{col.name},{col.offset},{col.size}");
@@ -179,10 +171,10 @@ public class SceneMap : SceneBase
                 //			//var colCount = col.OverlapCollider(contactFilter2D, targetCols);
                 //			Debug.Log(target.name + ",   " + colCount);
                 //			Debug.Log("=========================");
-            }
+                }
 
+		    }
 		}
-		//}
 
 	}
 

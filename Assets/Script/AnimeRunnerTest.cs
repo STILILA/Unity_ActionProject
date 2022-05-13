@@ -7,9 +7,9 @@ public class AnimeRunnerTest : MonoBehaviour
 {
 
 	// 宣告animes變數
-	Dictionary<string, List<FrameData>> _animes = new Dictionary<string, List<FrameData>>();
+	Dictionary<string, List<FrameData_OLD>> _animes = new Dictionary<string, List<FrameData_OLD>>();
 	// 設定frame結構
-	public class FrameData {
+	public class FrameData_OLD {
 		public int pic { get; set; }
 		public int wait { get; set; }
 		public object next { get; set; }
@@ -18,10 +18,10 @@ public class AnimeRunnerTest : MonoBehaviour
 	}
 	public void test() {
 		// 設定frame
-		_animes["stand"][0] = new FrameData { pic = 1, wait = 7, next = 1 };
-		_animes["stand"][1] = new FrameData { pic = 2, wait = 7, next = 2 };
-		_animes["stand"][2] = new FrameData { pic = 2, wait = 7, next = new List<object> { "stand", "1" } };
-		_animes["stand"][3] = new FrameData { pic = 2, wait = 7 };
+		_animes["stand"][0] = new FrameData_OLD { pic = 1, wait = 7, next = 1 };
+		_animes["stand"][1] = new FrameData_OLD { pic = 2, wait = 7, next = 2 };
+		_animes["stand"][2] = new FrameData_OLD { pic = 2, wait = 7, next = new List<object> { "stand", "1" } };
+		_animes["stand"][3] = new FrameData_OLD { pic = 2, wait = 7 };
 
 		// 讀取frame資訊並套用
 		foreach (var data in _animes["stand"]) {

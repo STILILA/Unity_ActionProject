@@ -66,7 +66,7 @@ public class MyMoveCharacterAction : MonoBehaviour
 			motion.DoAction_Z();
 			isInput = true;
 		}
-		if (Input.GetKey(KeyCode.X)) {
+		if (Input.GetKeyDown(KeyCode.X)) {
 			motion.DoAction_X();
 			isInput = true;
 		}

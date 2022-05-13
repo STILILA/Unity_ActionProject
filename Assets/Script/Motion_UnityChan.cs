@@ -3,11 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Motion_UnityChan : GameMotion
 {
 	new readonly List<string> atkState = new List<string>() { "atk1", "atk2", "atk3", "gun1", "gun1_hold" };
 
+
+
+
 	public override void SetupAnime() {
+
 		var animes = @"{
 			'stand':[
 				{'pic':'Unitychan_Idle_1', 'wait':8, 'nextNo':1, 'body':[[-0.03774764, -0.02141318, 0.2443573, 0.4237701]]},
@@ -70,36 +75,45 @@ public class Motion_UnityChan : GameMotion
 			],
 
 
+			'damage1':[
+				{'pic':'Unitychan_Damage_2', 'wait':2, 'nextNo':1 },
+				{'pic':'Unitychan_Damage_3', 'wait':-1, 'nextNo':1 }
+			],
+			'damage2':[
+				{'pic':'Unitychan_Damage_4', 'wait':2, 'nextNo':1 },
+				{'pic':'Unitychan_Damage_5', 'wait':-1, 'nextNo':1 }
+			],
+
 			'atk1':[
-				{'pic':'Unitychan_Soard_Combo_2', 'wait':3, 'nextNo':1 },
-				{'pic':'Unitychan_Soard_Combo_3', 'wait':3, 'nextNo':2 },
-				{'pic':'Unitychan_Soard_Combo_4', 'wait':3, 'nextNo':3 },
-				{'pic':'Unitychan_Soard_Combo_5', 'wait':3, 'nextNo':4, 'atk':[[0.14, -0.08, 0.52, 0.35]] },
-				{'pic':'Unitychan_Soard_Combo_6', 'wait':4, 'nextNo':5, 'atk':[], 'cancel' : true },
+				{'pic':'Unitychan_Soard_Combo_2', 'wait':2, 'nextNo':1 },
+				{'pic':'Unitychan_Soard_Combo_3', 'wait':2, 'nextNo':2 },
+				{'pic':'Unitychan_Soard_Combo_4', 'wait':2, 'nextNo':3 },
+				{'pic':'Unitychan_Soard_Combo_5', 'wait':2, 'nextNo':4, 'atk':[[0.14, -0.08, 0.52, 0.35]] },
+				{'pic':'Unitychan_Soard_Combo_6', 'wait':3, 'nextNo':5, 'atk':[], 'cancel' : true },
 				{'pic':'Unitychan_Soard_Combo_7', 'wait':7, 'nextMethod':'ActionEnd' }
 			],
 
 			'atk2':[
-				{'pic':'Unitychan_Soard_Combo_8', 'wait':3, 'nextNo':1 },
-				{'pic':'Unitychan_Soard_Combo_9', 'wait':3, 'nextNo':2 },
-				{'pic':'Unitychan_Soard_Combo_10', 'wait':3, 'nextNo':3 },
-				{'pic':'Unitychan_Soard_Combo_11', 'wait':3, 'nextNo':4 },
-				{'pic':'Unitychan_Soard_Combo_12', 'wait':3, 'nextNo':5, 'atk':[[0.1599156, 0.08680066, 0.5492049, 0.6929471]] },
-				{'pic':'Unitychan_Soard_Combo_13', 'wait':3, 'nextNo':6 },
-				{'pic':'Unitychan_Soard_Combo_14', 'wait':4, 'nextNo':7, 'atk':[], 'cancel' : true },
+				{'pic':'Unitychan_Soard_Combo_8', 'wait':2, 'nextNo':1 },
+				{'pic':'Unitychan_Soard_Combo_9', 'wait':2, 'nextNo':2 },
+				{'pic':'Unitychan_Soard_Combo_10', 'wait':2, 'nextNo':3 },
+				{'pic':'Unitychan_Soard_Combo_11', 'wait':2, 'nextNo':4 },
+				{'pic':'Unitychan_Soard_Combo_12', 'wait':2, 'nextNo':5, 'atk':[[0.1599156, 0.08680066, 0.5492049, 0.6929471]] },
+				{'pic':'Unitychan_Soard_Combo_13', 'wait':2, 'nextNo':6 },
+				{'pic':'Unitychan_Soard_Combo_14', 'wait':3, 'nextNo':7, 'atk':[], 'cancel' : true },
 				{'pic':'Unitychan_Soard_Combo_15', 'wait':7, 'nextMethod':'ActionEnd' }
 			],
 
 			'atk3':[
-				{'pic':'Unitychan_Soard_Combo_16', 'wait':3, 'nextNo':1 },
-				{'pic':'Unitychan_Soard_Combo_17', 'wait':3, 'nextNo':2 },
-				{'pic':'Unitychan_Soard_Combo_18', 'wait':3, 'nextNo':3 },
-				{'pic':'Unitychan_Soard_Combo_19', 'wait':3, 'nextNo':4 },
-				{'pic':'Unitychan_Soard_Combo_20', 'wait':3, 'nextNo':5, 'atk':[[0.2902966, 0.05575758, 0.768576, 0.6308609]] },
-				{'pic':'Unitychan_Soard_Combo_21', 'wait':3, 'nextNo':6, 'atk':[[0.5075981, -0.07876238, 0.5078144, 0.361821]] },
-				{'pic':'Unitychan_Soard_Combo_22', 'wait':3, 'nextNo':7, 'atk':[[0.553128, -0.07876238, 0.598874, 0.361821]] },
-				{'pic':'Unitychan_Soard_Combo_23', 'wait':3, 'nextNo':8, 'atk':[[0.7580125, -0.1346399, 0.3877811, 0.2500659]] },
-				{'pic':'Unitychan_Soard_Combo_24', 'wait':3, 'nextNo':9, 'atk':[[0.8200988, -0.1822393, 0.2636087, 0.1548671]], 'cancel' : true },
+				{'pic':'Unitychan_Soard_Combo_16', 'wait':2, 'nextNo':1 },
+				{'pic':'Unitychan_Soard_Combo_17', 'wait':2, 'nextNo':2 },
+				{'pic':'Unitychan_Soard_Combo_18', 'wait':2, 'nextNo':3 },
+				{'pic':'Unitychan_Soard_Combo_19', 'wait':2, 'nextNo':4 },
+				{'pic':'Unitychan_Soard_Combo_20', 'wait':2, 'nextNo':5, 'atk':[[0.2902966, 0.05575758, 0.768576, 0.6308609]] },
+				{'pic':'Unitychan_Soard_Combo_21', 'wait':2, 'nextNo':6, 'atk':[[0.5075981, -0.07876238, 0.5078144, 0.361821]] },
+				{'pic':'Unitychan_Soard_Combo_22', 'wait':2, 'nextNo':7, 'atk':[[0.553128, -0.07876238, 0.598874, 0.361821]] },
+				{'pic':'Unitychan_Soard_Combo_23', 'wait':2, 'nextNo':8, 'atk':[[0.7580125, -0.1346399, 0.3877811, 0.2500659]] },
+				{'pic':'Unitychan_Soard_Combo_24', 'wait':2, 'nextNo':9, 'atk':[[0.8200988, -0.1822393, 0.2636087, 0.1548671]], 'cancel' : true },
 				{'pic':'Unitychan_Soard_Combo_25', 'wait':12, 'nextMethod':'ActionEnd', 'atk':[] }
 			],
 
@@ -129,7 +143,7 @@ public class Motion_UnityChan : GameMotion
 
 		this.stateData = JsonMapper.ToObject(animes);
 
-
+		//Debug.Log(stateData.ToJson());
 	}
 
 
@@ -187,7 +201,7 @@ public class Motion_UnityChan : GameMotion
 		switch (currentState) {
 			case "gun1":
 			case "gun1_hold":
-				DoAction("gun1_hold");
+				DoAction("gun1_hold", true);
 				break;
 			default:
 				DoAction("gun1");
@@ -219,7 +233,7 @@ public class Motion_UnityChan : GameMotion
 				}
 				break;
 		}
-		canCancel = canSelfCancel = false;
+		canCancel = false;
 	}
 
 }
