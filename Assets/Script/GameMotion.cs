@@ -544,6 +544,14 @@ public class GameMotion : MonoBehaviour
 
 	}
 
+	public bool CanAction() {
+		return (!IsAtk() || IsCanCancel()) && !IsDamaging();
+	}
+
+
+	public bool IsDamaging() {
+		return hitstun > 0;
+	}
 
 	public virtual void DoNoInput() {
 		if (IsAtk()) { return; }

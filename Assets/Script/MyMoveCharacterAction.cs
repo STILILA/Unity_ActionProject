@@ -9,7 +9,10 @@ public class MyMoveCharacterAction : MonoBehaviour
 	public int dir = 1;
 
 	public GameMotion motion;
-	
+	KeyCode? memoryKey;
+	int memoryKeyCount = 0;
+
+
 	private void Awake() {
 		motion = GetComponent<GameMotion>();
 	}
@@ -25,6 +28,28 @@ public class MyMoveCharacterAction : MonoBehaviour
 		//AnimatorStateInfo currentStateInfo = motion.animator.GetCurrentAnimatorStateInfo(0);
 
 		
+
+		if (memoryKeyCount > 0) {
+			memoryKeyCount--;
+			if (memoryKeyCount == 0) {
+				memoryKey = null;
+			}
+		}
+
+
+		if (memoryKey != null && motion.CanAction()) {
+			switch ((KeyCode)memoryKey) {
+				case KeyCode.Z:
+					motion.DoAction_Z();
+					break;
+				case KeyCode.X:
+					motion.DoAction_X();
+					break;
+
+			}
+		}
+
+
 
 		if (Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.DownArrow)) {
 			dir = -1;
@@ -54,6 +79,12 @@ public class MyMoveCharacterAction : MonoBehaviour
 
 		//if (!motion.IsAtk() || motion.IsCanCancel()) {
 		if (Input.GetKeyDown(KeyCode.UpArrow)) {
+
+			if (!motion.CanAction()) {
+				SetMemoryKey(KeyCode.UpArrow);
+				return;
+			}
+
 			motion.DoJump(dir);
 			isInput = true;
 		}
@@ -62,10 +93,22 @@ public class MyMoveCharacterAction : MonoBehaviour
 
 		// 
 		if (Input.GetKeyDown(KeyCode.Z)) {
+
+			if (!motion.CanAction()) {
+				SetMemoryKey(KeyCode.Z);
+				return;
+			}
+
 			motion.DoAction_Z();
 			isInput = true;
 		}
 		if (Input.GetKeyDown(KeyCode.X)) {
+
+			if (!motion.CanAction()) {
+				SetMemoryKey(KeyCode.X);
+				return;
+			}
+
 			motion.DoAction_X();
 			isInput = true;
 		}
@@ -85,6 +128,12 @@ public class MyMoveCharacterAction : MonoBehaviour
 
 	}
     
+
+
+	void SetMemoryKey(KeyCode key) {
+		memoryKey = key;
+		memoryKeyCount = 6;
+	}
 
 
 }
