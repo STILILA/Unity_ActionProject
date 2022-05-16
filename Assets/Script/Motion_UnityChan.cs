@@ -216,6 +216,36 @@ public class Motion_UnityChan : GameMotion
 	}
 
 
+	public override SkillEffectData SkillEffect(GameMotion targetMotion) {
+		var se = new SkillEffectData();
+
+		switch (currentState) {
+			case "atk1":
+				se.damage = 4;
+				se.hitstop = 10;
+				se.hitstun = 20;
+				break;
+			case "atk2":
+				se.damage = 4;
+				se.hitstop = 10;
+				se.hitstun = 20;
+				break;
+			case "atk3":
+				se.damage = 30;
+				se.hitstop = 7;
+				se.hitstun = 20;
+				break;
+			case "gun1":
+				se.damage = 8;
+				se.hitstop = 2;
+				se.hitstun = 20;
+				break;
+		}
+
+		return se;
+	}
+
+
 	public override void ActionEnd() {
 		ClearRects(null,10);
 		switch (currentState) {

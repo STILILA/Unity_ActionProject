@@ -16,13 +16,16 @@ public class GameMotion : MonoBehaviour
 	public BoxCollider2D groundChecker;
 
 	public string startState = "stand";
-	public string currentState = "stand";
-	public int currentFrameNo = 0;
 	public string spriteBundleName = "unitychan";
+	public GameObject tempBody;  // 為了掛BoxCollider用，直接new出來會回傳null，幹你Unity
+	public GameObject tempAtk;
+
+	// 監視用
 	public bool canCancel = false;
 	public bool onAir;
-	
 
+	public int hp = 500;
+	public int maxhp = 500;
 	public float walkSpeed = 3;
 	public float runSpeed = 5;
 	public float airSpeed = 3;
@@ -30,23 +33,27 @@ public class GameMotion : MonoBehaviour
 	public float fricX = 2;
 	public float jumpPower = 5;
 
-	public GameObject tempBody;  // 為了掛BoxCollider用，直接new出來會回傳null，幹你Unity
-	public GameObject tempAtk;
-	
 
+
+	public string currentState = "stand";
+	public int currentFrameNo = 0;
 	protected int wait = 0;
 	protected int nextFrameNo = 0;
 	protected int stateTime = 0;
 	protected string nextState = string.Empty;
 	protected string nextMethod = string.Empty;
 
+	[SerializeField] int hitstop = 0;
+	[SerializeField] int hitstun = 0;
 	[SerializeField] float speedX = 0;
 	[SerializeField] float speedY = 0;
 	[SerializeField] float gravity = -0.2f;
 	[SerializeField] float gravityMax = -9;
 	[SerializeField] int dir = 1;
+
 	public List<BoxCollider2D> bodyRects = new List<BoxCollider2D>();
 	public List<BoxCollider2D> atkRects = new List<BoxCollider2D>();
+	public List<GameMotion> hitTargets = new List<GameMotion>();
 
 	//
 
@@ -213,7 +220,7 @@ public class GameMotion : MonoBehaviour
 		onAir = IsOnAir();
 
 		if (currentState == "damage1" || currentState == "damage2") {
-			if (currentFrameNo == 1) {
+			if (currentFrameNo == 1 && hitstun <= 0) {
 				if (onAir) {
 					ChangeState("jumpFall");
 				} else {
@@ -281,16 +288,46 @@ public class GameMotion : MonoBehaviour
 		}
 	}
 
+	public void ChangeDir(int dir) {
+		if (dir == 0) { return; }
+		this.dir = dir;
+		var scale = transform.localScale;
+		scale.x = Mathf.Abs(scale.x) * dir;
+		transform.localScale = scale;
+	}
+	// 用自訂狀態機表運作
+	public void ChangeState(string stateName) {
+		//if (currentState != stateName) {
+		if (!stateData.ContainsKey(stateName)) {
+			Debug.LogError($"狀態機名稱：{stateName}不存在。");
+			return;
+		}
+		ClearRects(null, 10);
+		nextMethod = nextState = string.Empty; // 要清空，以免誤執行
+		hitTargets.Clear();
+		nextFrameNo = 0;
+		wait = 0;
+		stateTime = 0;
+		canCancel = false;
+		currentState = stateName;
+		UpdateFrame(nextFrameNo);
+		//}
+	}
 
 	void UpdateMotion() {
 
+		if (hitstop > 0) {
+			hitstop--;
+			return;
+		}
+
 		stateTime++;
-
-
 		if (wait > 0) { 
 			wait--; 
 			return; 
 		}
+		if (hitstun > 0) { hitstun--; }
+
 		// 準備跳至狀態機下一格
 		if (wait == 0) {
 			// 有指定nextMethod的情況
@@ -367,38 +404,11 @@ public class GameMotion : MonoBehaviour
 	//	}
 	//}
 
-	// 用自訂狀態機表運作
-	public void ChangeState(string stateName) {
-		//if (currentState != stateName) {
-		if (!stateData.ContainsKey(stateName)) {
-			Debug.LogError($"狀態機名稱：{stateName}不存在。");
-			return;
-		}
-		ClearRects(null, 10);
-		nextMethod = nextState = string.Empty; // 要清空，以免誤執行
-		nextFrameNo = 0;
-		wait = 0;
-		stateTime = 0;
-		canCancel = false;
-		currentState = stateName;
-		UpdateFrame(nextFrameNo);
-		//}
-	}
 
 
-	public void DoAction(string stateName, bool forceCancel = false) {
-		if ((currentState != stateName || forceCancel) && (!IsAtk() || IsCanCancel())) {
-			ChangeState(stateName);
-		}
-	}
 
-	public void ChangeDir(int dir) {
-		if (dir == 0) { return; }
-		this.dir = dir;
-		var scale = transform.localScale;
-		scale.x = Mathf.Abs(scale.x) * dir;
-		transform.localScale = scale;
-	}
+
+
 
 	void SetCanCancel() {
 		canCancel = true;
@@ -632,6 +642,53 @@ public class GameMotion : MonoBehaviour
 
 	}
 
+
+
+	public void DoAction(string stateName, bool forceCancel = false) {
+		if ((currentState != stateName || forceCancel) && (!IsAtk() || IsCanCancel())) {
+			ChangeState(stateName);
+		}
+	}
+
+	public virtual void DamageFormula(int damage) {
+		hp = Mathf.Min(maxhp, Mathf.Max(hp - damage, 0));
+	}
+
+
+	public virtual void DoDamage(GameMotion atker) {
+		var skill = atker.SkillEffect(atker);
+		if (skill == null) { return; }
+
+		if (skill.hitstun != null) { hitstun = (int)skill.hitstun; }
+		if (skill.hitstop != null) { hitstop = atker.hitstop = (int)skill.hitstop; }
+		if (skill.damage != null) { DamageFormula((int)skill.damage); }
+
+
+		//if (hp == 0) {
+		//	DoDead();
+		//	return;
+		//}
+
+		switch (skill.damageType) {
+			case DamageType.None:
+				break;
+			case DamageType.Blow:
+				break;
+			case DamageType.HardBlow:
+				break;
+			default:
+				ChangeState(UnityEngine.Random.Range(0, 2) == 0 ? "damage1" : "damage2");
+				break;
+		}
+		
+	}
+
+	public void DoDead() {
+
+	}
+
+
+
 	public virtual void ActionEnd() {
 		ClearRects();
 		switch (currentState) {
@@ -650,6 +707,14 @@ public class GameMotion : MonoBehaviour
 		canCancel = false;
 	}
 
+
+	public virtual SkillEffectData SkillEffect(GameMotion targetMotion) {
+		var se = new SkillEffectData();
+		return se;
+	}
+
+
+
 	// 動畫事件
 	void AniEV_ActionEnd() {
 		ActionEnd();
@@ -657,4 +722,18 @@ public class GameMotion : MonoBehaviour
 	void AniEV_SetCanCancel() {
 		SetCanCancel();
 	}
+}
+
+
+public class SkillEffectData{
+	public int? damage = null;
+	public int? hitstun = null;
+	public int? hitstop = null;
+	public DamageType damageType = DamageType.Normal;
+}
+public enum DamageType {
+	None,  // 沒反應
+	Normal, // 站姿
+	Blow,  // 擊飛態
+	HardBlow // 重擊飛態
 }

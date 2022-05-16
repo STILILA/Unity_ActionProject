@@ -52,7 +52,7 @@ public class GameMessage : MonoBehaviour
             image.material.color = color;
             // 啊對了，因為是額外生成的物件，所以記得順帶 Destroy(obj.material)
         }
-        this.gameObject.SetActive(false);
+        //this.gameObject.SetActive(false);
     }
     
     bool isBusy()
@@ -76,6 +76,9 @@ public class GameMessage : MonoBehaviour
     // 初始化訊息內容
     public void initMsg(string texts)
     {
+        this.gameObject.SetActive(true);
+        this.window.gameObject.SetActive(true);
+
         // 清空
         windowMsg.text = "";
         textIndex = 0;
@@ -87,13 +90,16 @@ public class GameMessage : MonoBehaviour
         waitcount = 0;   
         waitFlag = false;  
         allTexts = ConvertEscapeChar(texts);
+
+
+
         //ProcessAllTextsToArray(allTexts);
 
         //foreach (var c in allTextArray)
         //{
         //    Debug.Log(c);
         //}
-        
+
     }
     // 能先轉換的控制碼(跳脫字元)先轉換 (ex：顯示變數、金錢等)
     string ConvertEscapeChar(string input)

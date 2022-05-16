@@ -71,7 +71,7 @@ public class GameInterpreter : MonoBehaviour
 
     public void CustomUpdate()
     {
-        if (msgObj.window.gameObject.activeInHierarchy) { return; }
+        if (msgObj.window.gameObject.activeSelf) { return; }
 
         if (this.listIndex < this.list.Length)
         {
@@ -120,8 +120,6 @@ public class GameInterpreter : MonoBehaviour
 
     public void StartTalk()
     {
-        msgObj.gameObject.SetActive(true);
-        msgObj.window.gameObject.SetActive(true);
         string text = "";
         this.listIndex++;
         var pattern = @"^\\cmd.";

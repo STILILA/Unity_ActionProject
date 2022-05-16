@@ -28,7 +28,7 @@ public class GameEvent : MonoBehaviour
         if (col.gameObject.layer == 8) { return; }
 
         // 注意，預設狀態調用此方法的物件有勾運動學、且兩邊物件都靜止的話會停止觸發，所以RigidBody的Sleep Mode要選Never Sleep
-        if (Input.GetKeyDown(KeyCode.UpArrow) && col.gameObject == scene.player &&  !scene.interpreter.isRunning)
+        if (Input.GetKeyDown(KeyCode.Return) && col.gameObject == scene.player &&  !scene.interpreter.isRunning)
         {
             EventStart();
         }

@@ -155,12 +155,19 @@ public class SceneMap : SceneBase
                 colliders.RemoveAll((x) => (x.gameObject.layer != 9) || !x.GetComponent<MotionGetter>() || (x.GetComponent<MotionGetter>().motion == atker) || (x.transform.parent.GetInstanceID() == atker.transform.GetInstanceID()));
 
                 foreach (var targetRect in colliders) {
-                    Debug.Log($"{atkRect.transform.parent.name} 攻擊到 {targetRect.name}");
-
-                    // 測試
                     var tMotion = targetRect.GetComponent<MotionGetter>().motion;
-                    tMotion.ChangeState("damage1");
-                //}
+                    //
+                    if (!tMotion) { continue; }
+                    //
+                    if (atker.hitTargets.Contains(tMotion)) {
+                        continue;
+					}
+                    Debug.Log($"{atker.name} 攻擊到 {tMotion.name}");
+                    //
+                    tMotion.DoDamage(atker);
+                    atker.hitTargets.Add(tMotion);
+                    continue;
+                }
 
                 //  Debug.Log($"{col.name},{col.offset},{col.size}");
                 //   Debug.Log("=================");
@@ -171,7 +178,7 @@ public class SceneMap : SceneBase
                 //			//var colCount = col.OverlapCollider(contactFilter2D, targetCols);
                 //			Debug.Log(target.name + ",   " + colCount);
                 //			Debug.Log("=========================");
-                }
+               // }
 
 		    }
 		}

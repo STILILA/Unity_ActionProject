@@ -2382,6 +2382,7 @@ GameObject:
   - component: {fileID: 642515657}
   - component: {fileID: 642515656}
   - component: {fileID: 642515658}
+  - component: {fileID: 642515655}
   m_Layer: 9
   m_Name: sign
   m_TagString: NPC
@@ -2389,6 +2390,27 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!50 &642515655
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642515654}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 0
+  m_CollisionDetection: 0
+  m_Constraints: 7
 --- !u!212 &642515656
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2590,7 +2612,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &688537252
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4217,18 +4239,22 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   groundChecker: {fileID: 372964362}
   startState: stand
-  currentState: stand
-  currentFrameNo: 0
   spriteBundleName: unitychan
+  tempBody: {fileID: 1173490530}
+  tempAtk: {fileID: 935506280}
   canCancel: 0
   onAir: 0
+  hp: 500
+  maxhp: 500
   walkSpeed: 3
   runSpeed: 5
   airSpeed: 3
   fricX: 2
   jumpPower: 5
-  tempBody: {fileID: 1173490530}
-  tempAtk: {fileID: 935506280}
+  currentState: stand
+  currentFrameNo: 0
+  hitstop: 0
+  hitstun: 0
   speedX: 0
   speedY: 0
   gravity: -0.2
@@ -4236,6 +4262,7 @@ MonoBehaviour:
   dir: 1
   bodyRects: []
   atkRects: []
+  hitTargets: []
 --- !u!50 &1812344764
 Rigidbody2D:
   serializedVersion: 4
@@ -4702,7 +4729,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 85573079604438858}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.91, y: -2.32, z: 0.020507812}
+  m_LocalPosition: {x: -4.52, y: -2.32, z: 0.020507812}
   m_LocalScale: {x: 3, y: 3, z: 0}
   m_Children:
   - {fileID: 728761918}
@@ -4862,18 +4889,22 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   groundChecker: {fileID: 728761919}
   startState: stand
-  currentState: stand
-  currentFrameNo: 0
   spriteBundleName: unitychan
+  tempBody: {fileID: 335601917}
+  tempAtk: {fileID: 1052684519}
   canCancel: 0
   onAir: 0
+  hp: 500
+  maxhp: 500
   walkSpeed: 3
   runSpeed: 5
   airSpeed: 3
   fricX: 2
   jumpPower: 11
-  tempBody: {fileID: 335601917}
-  tempAtk: {fileID: 1052684519}
+  currentState: stand
+  currentFrameNo: 0
+  hitstop: 0
+  hitstun: 0
   speedX: 0
   speedY: 0
   gravity: -0.6
@@ -4881,6 +4912,7 @@ MonoBehaviour:
   dir: 1
   bodyRects: []
   atkRects: []
+  hitTargets: []
 --- !u!114 &445886594906944139
 MonoBehaviour:
   m_ObjectHideFlags: 0
