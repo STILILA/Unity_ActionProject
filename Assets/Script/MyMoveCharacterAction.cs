@@ -6,7 +6,6 @@ using UnityEngine;
 public class MyMoveCharacterAction : MonoBehaviour
 {
 
-	public int hp = 4;
 	public int dir = 1;
 
 	public GameMotion motion;
