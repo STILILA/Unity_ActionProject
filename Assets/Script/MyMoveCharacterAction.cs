@@ -9,9 +9,6 @@ public class MyMoveCharacterAction : MonoBehaviour
 	public int dir = 1;
 
 	public GameMotion motion;
-	KeyCode? memoryKey;
-	int memoryKeyCount = 0;
-
 
 	private void Awake() {
 		motion = GetComponent<GameMotion>();
@@ -25,28 +22,11 @@ public class MyMoveCharacterAction : MonoBehaviour
 
 		bool isInput = false;
 		var dir = 0;
-		//AnimatorStateInfo currentStateInfo = motion.animator.GetCurrentAnimatorStateInfo(0);
 
-		
-
-		if (memoryKeyCount > 0) {
-			memoryKeyCount--;
-			if (memoryKeyCount == 0) {
-				memoryKey = null;
-			}
-		}
-
-
-		if (memoryKey != null && motion.CanAction()) {
-			switch ((KeyCode)memoryKey) {
-				case KeyCode.Z:
-					motion.DoAction_Z();
-					break;
-				case KeyCode.X:
-					motion.DoAction_X();
-					break;
-
-			}
+		// 處理預約指令
+		if (motion.commandPlan != null && motion.CanAction()) {
+			motion.commandPlan.Invoke();
+			return;
 		}
 
 
@@ -78,13 +58,7 @@ public class MyMoveCharacterAction : MonoBehaviour
 		}
 
 		//if (!motion.IsAtk() || motion.IsCanCancel()) {
-		if (Input.GetKeyDown(KeyCode.UpArrow)) {
-
-			if (!motion.CanAction()) {
-				SetMemoryKey(KeyCode.UpArrow);
-				return;
-			}
-
+		if (Input.GetKey(KeyCode.UpArrow)) {
 			motion.DoJump(dir);
 			isInput = true;
 		}
@@ -93,23 +67,50 @@ public class MyMoveCharacterAction : MonoBehaviour
 
 		// 
 		if (Input.GetKeyDown(KeyCode.Z)) {
-
-			if (!motion.CanAction()) {
-				SetMemoryKey(KeyCode.Z);
-				return;
+			if (Input.GetKey(KeyCode.RightArrow)) {
+				if (motion.dir == 1) {
+					motion.Cmd_6Z();
+				} else {
+					motion.Cmd_4Z();
+				}
+			} else if (Input.GetKey(KeyCode.LeftArrow)) {
+				if (motion.dir == -1) {
+					motion.Cmd_6Z();
+				}
+				else {
+					motion.Cmd_4Z();
+				}
+			} else if (Input.GetKey(KeyCode.DownArrow))	{
+				motion.Cmd_2Z();
+			} else {
+				motion.Cmd_Z();
 			}
-
-			motion.DoAction_Z();
 			isInput = true;
 		}
+
 		if (Input.GetKeyDown(KeyCode.X)) {
-
-			if (!motion.CanAction()) {
-				SetMemoryKey(KeyCode.X);
-				return;
+			if (Input.GetKey(KeyCode.RightArrow)) {
+				if (motion.dir == 1) {
+					motion.Cmd_6X();
+				}
+				else {
+					motion.Cmd_4X();
+				}
 			}
-
-			motion.DoAction_X();
+			else if (Input.GetKey(KeyCode.LeftArrow)) {
+				if (motion.dir == -1) {
+					motion.Cmd_6X();
+				}
+				else {
+					motion.Cmd_4X();
+				}
+			}
+			else if (Input.GetKey(KeyCode.DownArrow)) {
+				motion.Cmd_2X();
+			}
+			else {
+				motion.Cmd_X();
+			}
 			isInput = true;
 		}
 
@@ -129,11 +130,6 @@ public class MyMoveCharacterAction : MonoBehaviour
 	}
     
 
-
-	void SetMemoryKey(KeyCode key) {
-		memoryKey = key;
-		memoryKeyCount = 6;
-	}
 
 
 }

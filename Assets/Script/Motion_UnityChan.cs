@@ -1,4 +1,5 @@
 using LitJson;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,14 +9,11 @@ public class Motion_UnityChan : GameMotion
 {
 	new readonly List<string> atkState = new List<string>() { "atk1", "atk2", "atk3", "gun1", "gun1_hold" };
 
-
-
-
 	public override void SetupAnime() {
 
 		var animes = @"{
 			'stand':[
-				{'pic':'Unitychan_Idle_1', 'wait':8, 'nextNo':1, 'body':[[-0.03774764, -0.02141318, 0.2443573, 0.4237701]]},
+				{'pic':'Unitychan_Idle_1', 'wait':8, 'nextNo':1, 'body':[[-0.03774764, -0.02141318, 0.2443573, 0.4237701]], 'z':1},
 				{'pic':'Unitychan_Idle_2', 'wait':8, 'nextNo':2 },
 				{'pic':'Unitychan_Idle_3', 'wait':8, 'nextNo':3 },
 				{'pic':'Unitychan_Idle_4', 'wait':8, 'nextNo':4 },
@@ -23,7 +21,7 @@ public class Motion_UnityChan : GameMotion
 			],
 			
 			'run':[
-				{'pic':'Unitychan_Run_3', 'wait':3, 'nextNo':1 },
+				{'pic':'Unitychan_Run_3', 'wait':3, 'nextNo':1, 'z':1 },
 				{'pic':'Unitychan_Run_4', 'wait':3, 'nextNo':2 },
 				{'pic':'Unitychan_Run_5', 'wait':3, 'nextNo':3 },
 				{'pic':'Unitychan_Run_6', 'wait':3, 'nextNo':4 },
@@ -53,7 +51,7 @@ public class Motion_UnityChan : GameMotion
 			],
 
 			'jumpStart':[
-				{'pic':'Unitychan_Jump_Landing', 'wait':3, 'nextState':'jumpUp'}
+				{'pic':'Unitychan_Jump_Landing', 'wait':3, 'nextState':'jumpUp', 'z':1}
 
 			],
 			'jumpUp':[
@@ -76,16 +74,16 @@ public class Motion_UnityChan : GameMotion
 
 
 			'damage1':[
-				{'pic':'Unitychan_Damage_2', 'wait':2, 'nextNo':1 },
+				{'pic':'Unitychan_Damage_2', 'wait':2, 'nextNo':1, 'z':-1 },
 				{'pic':'Unitychan_Damage_3', 'wait':-1, 'nextNo':1 }
 			],
 			'damage2':[
-				{'pic':'Unitychan_Damage_4', 'wait':2, 'nextNo':1 },
+				{'pic':'Unitychan_Damage_4', 'wait':2, 'nextNo':1, 'z':-1 },
 				{'pic':'Unitychan_Damage_5', 'wait':-1, 'nextNo':1 }
 			],
 
 			'atk1':[
-				{'pic':'Unitychan_Soard_Combo_2', 'wait':2, 'nextNo':1 },
+				{'pic':'Unitychan_Soard_Combo_2', 'wait':2, 'nextNo':1, 'z':10 },
 				{'pic':'Unitychan_Soard_Combo_3', 'wait':2, 'nextNo':2 },
 				{'pic':'Unitychan_Soard_Combo_4', 'wait':2, 'nextNo':3 },
 				{'pic':'Unitychan_Soard_Combo_5', 'wait':2, 'nextNo':4, 'atk':[[0.14, -0.08, 0.52, 0.35]] },
@@ -94,7 +92,7 @@ public class Motion_UnityChan : GameMotion
 			],
 
 			'atk2':[
-				{'pic':'Unitychan_Soard_Combo_8', 'wait':2, 'nextNo':1 },
+				{'pic':'Unitychan_Soard_Combo_8', 'wait':2, 'nextNo':1, 'z':10 },
 				{'pic':'Unitychan_Soard_Combo_9', 'wait':2, 'nextNo':2 },
 				{'pic':'Unitychan_Soard_Combo_10', 'wait':2, 'nextNo':3 },
 				{'pic':'Unitychan_Soard_Combo_11', 'wait':2, 'nextNo':4 },
@@ -105,7 +103,7 @@ public class Motion_UnityChan : GameMotion
 			],
 
 			'atk3':[
-				{'pic':'Unitychan_Soard_Combo_16', 'wait':2, 'nextNo':1 },
+				{'pic':'Unitychan_Soard_Combo_16', 'wait':2, 'nextNo':1, 'z':10 },
 				{'pic':'Unitychan_Soard_Combo_17', 'wait':2, 'nextNo':2 },
 				{'pic':'Unitychan_Soard_Combo_18', 'wait':2, 'nextNo':3 },
 				{'pic':'Unitychan_Soard_Combo_19', 'wait':2, 'nextNo':4 },
@@ -118,24 +116,24 @@ public class Motion_UnityChan : GameMotion
 			],
 
 			'gun1':[
-				{'pic':'Unitychan_Hundgun1_2', 'wait':3, 'nextNo':1 },
-				{'pic':'Unitychan_Hundgun1_3', 'wait':3, 'nextNo':2 },
-				{'pic':'Unitychan_Hundgun1_4', 'wait':3, 'nextNo':3 },
-				{'pic':'Unitychan_Hundgun2_5', 'wait':3, 'nextNo':4 },
-				{'pic':'Unitychan_Hundgun2_6', 'wait':3, 'nextNo':5, 'atk':[[0.9590002, 0.02490908, 1.971455, 0.5018182]] },
-				{'pic':'Unitychan_Hundgun2_7', 'wait':3, 'nextNo':6 },
-				{'pic':'Unitychan_Hundgun2_8', 'wait':3, 'nextNo':7, 'atk':[] },
-				{'pic':'Unitychan_Hundgun2_9', 'wait':3, 'nextNo':8, 'selfCancel':true, 'cancel' : true },
-				{'pic':'Unitychan_Hundgun1_4', 'wait':3, 'nextNo':9 },
-				{'pic':'Unitychan_Hundgun1_2', 'wait':3, 'nextMethod':'ActionEnd' }
+				{'pic':'Unitychan_Hundgun1_2', 'wait':2, 'nextNo':1, 'z':10 },
+				{'pic':'Unitychan_Hundgun1_3', 'wait':2, 'nextNo':2 },
+				{'pic':'Unitychan_Hundgun1_4', 'wait':2, 'nextNo':3 },
+				{'pic':'Unitychan_Hundgun2_5', 'wait':2, 'nextNo':4 },
+				{'pic':'Unitychan_Hundgun2_6', 'wait':2, 'nextNo':5, 'atk':[[0.9590002, 0.02490908, 1.971455, 0.5018182]] },
+				{'pic':'Unitychan_Hundgun2_7', 'wait':2, 'nextNo':6 },
+				{'pic':'Unitychan_Hundgun2_8', 'wait':2, 'nextNo':7, 'atk':[] },
+				{'pic':'Unitychan_Hundgun2_9', 'wait':2, 'nextNo':8, 'selfCancel':true, 'cancel' : true },
+				{'pic':'Unitychan_Hundgun1_4', 'wait':2, 'nextNo':9 },
+				{'pic':'Unitychan_Hundgun1_2', 'wait':2, 'nextMethod':'ActionEnd' }
 			],
 			'gun1_hold':[
-				{'pic':'Unitychan_Hundgun2_6', 'wait':3, 'nextNo':1, 'atk':[[0.9590002, 0.02490908, 1.971455, 0.5018182]] },
-				{'pic':'Unitychan_Hundgun2_7', 'wait':3, 'nextNo':2 },
-				{'pic':'Unitychan_Hundgun2_8', 'wait':3, 'nextNo':3, 'atk':[] },
-				{'pic':'Unitychan_Hundgun2_9', 'wait':3, 'nextNo':4, 'selfCancel':true, 'cancel' : true },
-				{'pic':'Unitychan_Hundgun1_4', 'wait':3, 'nextNo':5 },
-				{'pic':'Unitychan_Hundgun1_2', 'wait':3, 'nextMethod':'ActionEnd' }
+				{'pic':'Unitychan_Hundgun2_6', 'wait':2, 'nextNo':1, 'atk':[[0.9590002, 0.02490908, 1.971455, 0.5018182]], 'z':10 },
+				{'pic':'Unitychan_Hundgun2_7', 'wait':2, 'nextNo':2 },
+				{'pic':'Unitychan_Hundgun2_8', 'wait':2, 'nextNo':3, 'atk':[] },
+				{'pic':'Unitychan_Hundgun2_9', 'wait':2, 'nextNo':4, 'selfCancel':true, 'cancel' : true },
+				{'pic':'Unitychan_Hundgun1_4', 'wait':2, 'nextNo':5 },
+				{'pic':'Unitychan_Hundgun1_2', 'wait':2, 'nextMethod':'ActionEnd' }
 			]
 
 
@@ -175,46 +173,73 @@ public class Motion_UnityChan : GameMotion
 	}
 
 
-	public override void DoAction_Z() {
+	public override void Cmd_Z() {
 		if (!onAir) {
 			switch (currentState) {
 				case "atk1":
-					DoAction("atk2");
+					DoAction("atk2", Cmd_Z);
 					break;
 				case "atk2":
-					DoAction("atk3");
+					DoAction("atk3", Cmd_Z);
 					break;
 				default:
-					DoAction("atk1");
+					DoAction("atk1", Cmd_Z);
 					break;
 			}
 		}
 	}
 
-	public override void DoAction_6Z() {
-
+	public override void Cmd_6Z() {
+		Cmd_Z();
 	}
-	public override void DoAction_2Z() {
-
+	public override void Cmd_2Z() {
+		Cmd_Z();
 	}
-	public override void DoAction_X() {
+	public override void Cmd_4Z() {
+		if (!onAir) {
+			switch (currentState) {
+				case "atk1":
+					DoAction("atk2", Cmd_Z, needTurn: true);
+					break;
+				case "atk2":
+					DoAction("atk3", Cmd_Z, needTurn: true);
+					break;
+				default:
+					DoAction("atk1", Cmd_Z, needTurn: true);
+					break;
+			}
+		}
+	}
+
+
+	public override void Cmd_X() {
 		switch (currentState) {
 			case "gun1":
 			case "gun1_hold":
-				DoAction("gun1_hold", true);
+				DoAction("gun1_hold", Cmd_X, true);
 				break;
 			default:
-				DoAction("gun1");
+				DoAction("gun1", Cmd_X);
 				break;
 		}
 	}
-	public override void DoAction_6X() {
-
+	public override void Cmd_6X() {
+		Cmd_X();
 	}
-	public override void DoAction_2X() {
-
+	public override void Cmd_2X() {
+		Cmd_X();
 	}
-
+	public override void Cmd_4X() {
+		switch (currentState) {
+			case "gun1":
+			case "gun1_hold":
+				DoAction("gun1_hold", Cmd_X, true, true);
+				break;
+			default:
+				DoAction("gun1", Cmd_X, needTurn:true);
+				break;
+		}
+	}
 
 	public override SkillEffectData SkillEffect(GameMotion targetMotion) {
 		var se = new SkillEffectData();
@@ -247,14 +272,8 @@ public class Motion_UnityChan : GameMotion
 
 
 	public override void ActionEnd() {
-		ClearRects(null,10);
+		ClearAtkRects();
 		switch (currentState) {
-			case "atk1":
-			case "atk2":
-			case "atk3":
-			case "gun1":
-				ChangeState("stand");
-				break;
 			default:
 				if (onAir) {
 					ChangeState("jumpFall");

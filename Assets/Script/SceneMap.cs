@@ -44,7 +44,7 @@ public class SceneMap : SceneBase
         allBattlers.Add(player.GetComponent<GameMotion>());
         foreach (var ev in events) { allBattlers.Add(ev.GetComponent<GameMotion>()); }
         allBattlers.RemoveAll(x => x == null); // 移除null
-        Debug.Log(allBattlers.Count);
+        //Debug.Log(allBattlers.Count);
 
 
         Global.Audio.PlayBGM(bgm);

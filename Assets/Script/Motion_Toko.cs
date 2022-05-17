@@ -14,7 +14,7 @@ public class Motion_Toko : GameMotion
 
 		var animes = @"{
 			'stand':[
-				{'pic':'Toko_Idle_1', 'wait':8, 'nextNo':1, 'body':[[-0.001684546, -0.01715124, 0.200902, 0.4854634]]},
+				{'pic':'Toko_Idle_1', 'wait':8, 'nextNo':1, 'body':[[-0.001684546, -0.01715124, 0.200902, 0.4854634]], 'z':1},
 				{'pic':'Toko_Idle_2', 'wait':8, 'nextNo':2 },
 				{'pic':'Toko_Idle_3', 'wait':8, 'nextNo':3 },
 				{'pic':'Toko_Idle_4', 'wait':8, 'nextNo':4 },
@@ -47,7 +47,7 @@ public class Motion_Toko : GameMotion
 			],
 
 			'jumpStart':[
-				{'pic':'Toko_Crouch_2', 'wait':3, 'nextState':'jumpUp'}
+				{'pic':'Toko_Crouch_2', 'wait':3, 'nextState':'jumpUp', 'z':1}
 
 			],
 			'jumpUp':[
@@ -67,16 +67,16 @@ public class Motion_Toko : GameMotion
 
 
 			'damage1':[
-				{'pic':'Toko_Damage_3', 'wait':2, 'nextNo':1 },
+				{'pic':'Toko_Damage_3', 'wait':2, 'nextNo':1, 'z':-1 },
 				{'pic':'Toko_Damage_4', 'wait':-1, 'nextNo':1 }
 			],
 			'damage2':[
-				{'pic':'Toko_Damage_3', 'wait':2, 'nextNo':1 },
+				{'pic':'Toko_Damage_3', 'wait':2, 'nextNo':1, 'z':-1 },
 				{'pic':'Toko_Damage_4', 'wait':-1, 'nextNo':1 }
 			],
 
 			'atk1':[
-				{'pic':'Toko_Punch_2', 'wait':2, 'nextNo':1 },
+				{'pic':'Toko_Punch_2', 'wait':2, 'nextNo':1, 'z':10 },
 				{'pic':'Toko_Punch_3', 'wait':2, 'nextNo':2 },
 				{'pic':'Toko_Punch_4', 'wait':2, 'nextNo':3, 'atk':[[0.14, -0.08, 0.52, 0.35]] },
 				{'pic':'Toko_Punch_5', 'wait':2, 'nextNo':4 },
@@ -124,7 +124,7 @@ public class Motion_Toko : GameMotion
 	}
 
 
-	public override void DoAction_Z() {
+	public override void Cmd_Z() {
 		if (!onAir) {
 			switch (currentState) {
 				//case "atk1":
@@ -134,19 +134,22 @@ public class Motion_Toko : GameMotion
 				//	DoAction("atk3");
 				//	break;
 				default:
-					DoAction("atk1");
+					DoAction("atk1", Cmd_Z);
 					break;
 			}
 		}
 	}
 
-	public override void DoAction_6Z() {
+	public override void Cmd_6Z() {
 
 	}
-	public override void DoAction_2Z() {
+	public override void Cmd_2Z() {
 
 	}
-	public override void DoAction_X() {
+	public override void Cmd_4Z() {
+
+	}
+	public override void Cmd_X() {
 		//switch (currentState) {
 		//	case "gun1":
 		//	case "gun1_hold":
@@ -157,23 +160,19 @@ public class Motion_Toko : GameMotion
 		//		break;
 		//}
 	}
-	public override void DoAction_6X() {
+	public override void Cmd_6X() {
 
 	}
-	public override void DoAction_2X() {
+	public override void Cmd_2X() {
 
 	}
+	public override void Cmd_4X() {
 
+	}
 
 	public override void ActionEnd() {
-		ClearRects(null, 10);
+		ClearAtkRects();
 		switch (currentState) {
-			case "atk1":
-			case "atk2":
-			case "atk3":
-			case "gun1":
-				ChangeState("stand");
-				break;
 			default:
 				if (onAir) {
 					ChangeState("jumpFall");

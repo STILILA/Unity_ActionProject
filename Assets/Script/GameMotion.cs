@@ -49,8 +49,9 @@ public class GameMotion : MonoBehaviour
 	[SerializeField] float speedY = 0;
 	[SerializeField] float gravity = -0.2f;
 	[SerializeField] float gravityMax = -9;
-	[SerializeField] int dir = 1;
-
+	public int dir = 1;
+	public Action commandPlan = null;
+	[SerializeField] int commandPlanCount = 0;
 	public List<BoxCollider2D> bodyRects = new List<BoxCollider2D>();
 	public List<BoxCollider2D> atkRects = new List<BoxCollider2D>();
 	public List<GameMotion> hitTargets = new List<GameMotion>();
@@ -92,7 +93,7 @@ public class GameMotion : MonoBehaviour
 
 		var animes = @"{
 			'stand':[
-				{'pic':'Unitychan_Idle_1', 'wait':8, 'nextNo':1, 'body':[[-0.03774764, -0.02141318, 0.2443573, 0.4237701]]},
+				{'pic':'Unitychan_Idle_1', 'wait':8, 'nextNo':1, 'body':[[-0.03774764, -0.02141318, 0.2443573, 0.4237701]], 'z':1},
 				{'pic':'Unitychan_Idle_2', 'wait':8, 'nextNo':2 },
 				{'pic':'Unitychan_Idle_3', 'wait':8, 'nextNo':3 },
 				{'pic':'Unitychan_Idle_4', 'wait':8, 'nextNo':4 },
@@ -130,7 +131,7 @@ public class GameMotion : MonoBehaviour
 			],
 
 			'jumpStart':[
-				{'pic':'Unitychan_Jump_Landing', 'wait':3, 'nextState':'jumpUp'}
+				{'pic':'Unitychan_Jump_Landing', 'wait':3, 'nextState':'jumpUp', 'z':1}
 
 			],
 			'jumpUp':[
@@ -149,61 +150,26 @@ public class GameMotion : MonoBehaviour
 			],
 			'landing':[
 				{'pic':'Unitychan_Jump_Landing', 'wait':5, 'nextState':'stand' }
+			],			
+			'damage1':[
+				{'pic':'Toko_Damage_3', 'wait':2, 'nextNo':1, 'z':-1 },
+				{'pic':'Toko_Damage_4', 'wait':-1, 'nextNo':1 }
 			],
-
+			'damage2':[
+				{'pic':'Toko_Damage_3', 'wait':2, 'nextNo':1, 'z':-1 },
+				{'pic':'Toko_Damage_4', 'wait':-1, 'nextNo':1 }
+			],
 
 			'atk1':[
-				{'pic':'Unitychan_Soard_Combo_2', 'wait':3, 'nextNo':1 },
-				{'pic':'Unitychan_Soard_Combo_3', 'wait':3, 'nextNo':2 },
-				{'pic':'Unitychan_Soard_Combo_4', 'wait':3, 'nextNo':3 },
-				{'pic':'Unitychan_Soard_Combo_5', 'wait':3, 'nextNo':4, 'atk':[[0.14, -0.08, 0.52, 0.35]] },
-				{'pic':'Unitychan_Soard_Combo_6', 'wait':4, 'nextNo':5, 'atk':[], 'cancel' : true },
-				{'pic':'Unitychan_Soard_Combo_7', 'wait':7, 'nextMethod':'ActionEnd' }
-			],
-
-			'atk2':[
-				{'pic':'Unitychan_Soard_Combo_8', 'wait':3, 'nextNo':1 },
-				{'pic':'Unitychan_Soard_Combo_9', 'wait':3, 'nextNo':2 },
-				{'pic':'Unitychan_Soard_Combo_10', 'wait':3, 'nextNo':3 },
-				{'pic':'Unitychan_Soard_Combo_11', 'wait':3, 'nextNo':4 },
-				{'pic':'Unitychan_Soard_Combo_12', 'wait':3, 'nextNo':5, 'atk':[[0.1599156, 0.08680066, 0.5492049, 0.6929471]] },
-				{'pic':'Unitychan_Soard_Combo_13', 'wait':3, 'nextNo':6 },
-				{'pic':'Unitychan_Soard_Combo_14', 'wait':4, 'nextNo':7, 'atk':[], 'cancel' : true },
-				{'pic':'Unitychan_Soard_Combo_15', 'wait':7, 'nextMethod':'ActionEnd' }
-			],
-
-			'atk3':[
-				{'pic':'Unitychan_Soard_Combo_16', 'wait':3, 'nextNo':1 },
-				{'pic':'Unitychan_Soard_Combo_17', 'wait':3, 'nextNo':2 },
-				{'pic':'Unitychan_Soard_Combo_18', 'wait':3, 'nextNo':3 },
-				{'pic':'Unitychan_Soard_Combo_19', 'wait':3, 'nextNo':4 },
-				{'pic':'Unitychan_Soard_Combo_20', 'wait':3, 'nextNo':5, 'atk':[[0.2902966, 0.05575758, 0.768576, 0.6308609]] },
-				{'pic':'Unitychan_Soard_Combo_21', 'wait':3, 'nextNo':6, 'atk':[[0.5075981, -0.07876238, 0.5078144, 0.361821]] },
-				{'pic':'Unitychan_Soard_Combo_22', 'wait':3, 'nextNo':7, 'atk':[[0.553128, -0.07876238, 0.598874, 0.361821]] },
-				{'pic':'Unitychan_Soard_Combo_23', 'wait':3, 'nextNo':8, 'atk':[[0.7580125, -0.1346399, 0.3877811, 0.2500659]] },
-				{'pic':'Unitychan_Soard_Combo_24', 'wait':3, 'nextNo':9, 'atk':[[0.8200988, -0.1822393, 0.2636087, 0.1548671]], 'cancel' : true },
-				{'pic':'Unitychan_Soard_Combo_25', 'wait':12, 'nextMethod':'ActionEnd', 'atk':[] }
-			],
-
-			'gun1':[
-				{'pic':'Unitychan_Hundgun1_2', 'wait':3, 'nextNo':1 },
-				{'pic':'Unitychan_Hundgun1_3', 'wait':3, 'nextNo':2 },
-				{'pic':'Unitychan_Hundgun1_4', 'wait':3, 'nextNo':3 },
-				{'pic':'Unitychan_Hundgun2_5', 'wait':3, 'nextNo':4 },
-				{'pic':'Unitychan_Hundgun2_6', 'wait':3, 'nextNo':5, 'atk':[[0.9590002, 0.02490908, 1.971455, 0.5018182]] },
-				{'pic':'Unitychan_Hundgun2_7', 'wait':3, 'nextNo':6 },
-				{'pic':'Unitychan_Hundgun2_8', 'wait':3, 'nextNo':7 },
-				{'pic':'Unitychan_Hundgun2_9', 'wait':3, 'nextNo':8, 'atk':[], 'selfCancel':true, 'cancel' : true },
-				{'pic':'Unitychan_Hundgun1_4', 'wait':3, 'nextNo':9 },
-				{'pic':'Unitychan_Hundgun1_2', 'wait':3, 'nextMethod':'ActionEnd' }
-			],
-			'gun1_hold':[
-				{'pic':'Unitychan_Hundgun2_6', 'wait':3, 'nextNo':1, 'atk':[[0.9590002, 0.02490908, 1.971455, 0.5018182]] },
-				{'pic':'Unitychan_Hundgun2_7', 'wait':3, 'nextNo':2 },
-				{'pic':'Unitychan_Hundgun2_8', 'wait':3, 'nextNo':3 },
-				{'pic':'Unitychan_Hundgun2_9', 'wait':3, 'nextNo':4, 'atk':[], 'selfCancel':true, 'cancel' : true },
-				{'pic':'Unitychan_Hundgun1_4', 'wait':3, 'nextNo':5 },
-				{'pic':'Unitychan_Hundgun1_2', 'wait':3, 'nextMethod':'ActionEnd' }
+				{'pic':'Toko_Punch_2', 'wait':2, 'nextNo':1, 'z':10 },
+				{'pic':'Toko_Punch_3', 'wait':2, 'nextNo':2 },
+				{'pic':'Toko_Punch_4', 'wait':2, 'nextNo':3, 'atk':[[0.14, -0.08, 0.52, 0.35]] },
+				{'pic':'Toko_Punch_5', 'wait':2, 'nextNo':4 },
+				{'pic':'Toko_Punch_6', 'wait':2, 'nextNo':5, 'atk':[], 'cancel' : true },
+				{'pic':'Toko_Punch_7', 'wait':2, 'nextNo':6 },
+				{'pic':'Toko_Punch_8', 'wait':2, 'nextNo':7 },
+				{'pic':'Toko_Punch_9', 'wait':2, 'nextNo':8 },
+				{'pic':'Toko_Punch_10', 'wait':2, 'nextMethod':'ActionEnd' }
 			]
 
 
@@ -214,10 +180,12 @@ public class GameMotion : MonoBehaviour
 
 
 	private void Update() {
+		onAir = IsOnAir();
 
 		UpdateMotion();
 
 		onAir = IsOnAir();
+
 
 		if (currentState == "damage1" || currentState == "damage2") {
 			if (currentFrameNo == 1 && hitstun <= 0) {
@@ -302,7 +270,7 @@ public class GameMotion : MonoBehaviour
 			Debug.LogError($"狀態機名稱：{stateName}不存在。");
 			return;
 		}
-		ClearRects(null, 10);
+		ClearAtkRects();
 		nextMethod = nextState = string.Empty; // 要清空，以免誤執行
 		hitTargets.Clear();
 		nextFrameNo = 0;
@@ -322,6 +290,14 @@ public class GameMotion : MonoBehaviour
 		}
 
 		stateTime++;
+
+		if (commandPlanCount > 0) {
+			commandPlanCount--;
+			if (commandPlanCount == 0) {
+				commandPlan = null;
+			}
+		}
+
 		if (wait > 0) { 
 			wait--; 
 			return; 
@@ -374,16 +350,19 @@ public class GameMotion : MonoBehaviour
 					SetCanCancel();
 					break;
 				case "atk":
-					SetRectByData(frameData[param], 10);
+					SetRectByData(frameData[param], Global.atkLayer);
 					break;
 				case "body":
-					SetRectByData(frameData[param], 9);
+					SetRectByData(frameData[param], Global.bodyLayer);
 					break;
 				case "speedX":
 					speedX = (float) frameData[param] * dir;
 					break;
 				case "speedY":
 					speedY = (float) frameData[param];
+					break;
+				case "z":
+					spriteRenderer.sortingOrder = (int) frameData[param];
 					break;
 			}
 
@@ -403,11 +382,6 @@ public class GameMotion : MonoBehaviour
 	//		currentState = stateName;
 	//	}
 	//}
-
-
-
-
-
 
 
 	void SetCanCancel() {
@@ -441,7 +415,7 @@ public class GameMotion : MonoBehaviour
 	/// <param name="rects"></param>
 	/// <param name="layer"></param>
 	public void SetRects(List<BoxCollider2D> rects, int layer) {
-		if (layer == 9) {
+		if (layer == Global.bodyLayer) {
 			bodyRects.Clear();
 			var comps = tempBody.GetComponents<BoxCollider2D>();
 			foreach (var comp in comps) {
@@ -466,7 +440,7 @@ public class GameMotion : MonoBehaviour
 	/// layer：9身體、10攻擊
 	/// </summary>
 	void SetRectByData(JsonData rectDatas, int layer) {
-		if (layer == 9) {
+		if (layer == Global.bodyLayer) {
 			bodyRects.Clear();
 			var comps = tempBody.GetComponents<BoxCollider2D>();
 			foreach (var comp in comps) {
@@ -511,7 +485,7 @@ public class GameMotion : MonoBehaviour
 			}
 		} else {
 	//		if (rects == null) { return; }
-			if (layer == 9) {
+			if (layer == Global.bodyLayer) {
 				if (rects == null || rects.Count <= 0) {
 					bodyRects.Clear();
 					var comps = tempBody.GetComponents<BoxCollider2D>();
@@ -542,6 +516,12 @@ public class GameMotion : MonoBehaviour
 			}
 		}
 
+	}
+	protected void ClearAtkRects() {
+		ClearRects(null, Global.atkLayer);
+	}
+	protected void ClearBodyRects() {
+		ClearRects(null, Global.bodyLayer);
 	}
 
 	public bool CanAction() {
@@ -584,6 +564,10 @@ public class GameMotion : MonoBehaviour
 		
 		if (onAir) {
 			speedX = runSpeed * dir;
+			if (currentState != "jumpStart" && currentState != "jumpUp" && currentState != "jumpMid" && currentState != "jumpFall") {
+				ChangeState("jumpFall");
+			}
+				
 		}
 		else {
 			if (currentState == "jumpStart" || currentState == "jumpUp" || currentState == "walk") { return; }
@@ -599,7 +583,9 @@ public class GameMotion : MonoBehaviour
 		ChangeDir(dir);
 		if (onAir) {
 			speedX = runSpeed * dir;
-			//ChangeState("jump");
+			if (currentState != "jumpStart" && currentState != "jumpUp" && currentState != "jumpMid" && currentState != "jumpFall") {
+				ChangeState("jumpFall");
+			}
 		}
 		else {
 			if (currentState == "jumpStart" || currentState == "jumpUp" || currentState == "run") { return; }
@@ -631,30 +617,43 @@ public class GameMotion : MonoBehaviour
 	}
 
 
-	public virtual void DoAction_Z() {
+	public virtual void Cmd_Z() {
 	}
 
-	public virtual void DoAction_6Z() {
+	public virtual void Cmd_6Z() {
 
 	}
-	public virtual void DoAction_2Z() {
+	public virtual void Cmd_4Z() {
 
 	}
-	public virtual void DoAction_X() {
+	public virtual void Cmd_2Z() {
 
 	}
-	public virtual void DoAction_6X() {
+	public virtual void Cmd_X() {
 
 	}
-	public virtual void DoAction_2X() {
+	public virtual void Cmd_6X() {
+
+	}
+	public virtual void Cmd_2X() {
+
+	}
+	public virtual void Cmd_4X() {
 
 	}
 
 
-
-	public void DoAction(string stateName, bool forceCancel = false) {
-		if ((currentState != stateName || forceCancel) && (!IsAtk() || IsCanCancel())) {
-			ChangeState(stateName);
+	public void DoAction(string stateName, Action cmd, bool forceCancel = false, bool needTurn = false) {
+		if ((currentState != stateName || forceCancel)) {
+			// 可實行指令的情況
+			if (!IsAtk() || IsCanCancel()) {
+				if (needTurn) { ChangeDir(dir *= -1); }
+				ChangeState(stateName);
+			} else {
+				// 預約輸入
+				commandPlan = cmd;
+				commandPlanCount = 6;
+			}
 		}
 	}
 
@@ -698,7 +697,7 @@ public class GameMotion : MonoBehaviour
 
 
 	public virtual void ActionEnd() {
-		ClearRects();
+		ClearAtkRects();
 		switch (currentState) {
 			case "atk1":
 				ChangeState("stand");
