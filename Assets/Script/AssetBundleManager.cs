@@ -65,6 +65,10 @@ public class AssetBundleManager {
 	// 一定要加where那段，我不知為何
 	static public T GetAsset<T>(string abName, string filename) where T : UnityEngine.Object {
 
+
+		Debug.Log(bundleList);
+		Debug.Log(abName);
+
 		var ab = bundleList[abName];
 		if (ab) {
 			return ab.LoadAsset<T>(filename);

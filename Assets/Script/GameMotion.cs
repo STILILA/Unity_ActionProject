@@ -240,11 +240,15 @@ public class GameMotion : MonoBehaviour
 		}
 		else {
 			if (currentState == "jumpFall") { ChangeState("landing"); speedY = 0; }
-			//speedY = 0;
+			speedY = 0;
 		}
 
 		
 
+	}
+	
+	public bool IsMoving() {
+		return (speedX != 0 || speedY != 0);
 	}
 
 	void ChangeSprite(string filename) {

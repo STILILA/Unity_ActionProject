@@ -17,6 +17,7 @@ public class Global : MonoBehaviour
     public static bool canControl;
     public static bool canAI;
     public static bool isEventRunnig;
+    public static int mapLayer = 8;
     public static int atkLayer = 10;
     public static int bodyLayer = 9;
     // Start is called before the first frame update
